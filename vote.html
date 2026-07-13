@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en" data-ui-scale="medium">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Public Voting Terminal - ElectionAI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Global App Engine Loader Overlay -->
+    <div id="global-loader" class="flex-center-alignment">
+        <div class="spinner-ring"></div>
+        <p class="processing-pulse-vector" style="font-weight: 600; font-size: 0.95rem; margin-top: 8px;">Synchronizing Ballot Data...</p>
+    </div>
+
+    <!-- Active Toast Alert System Layer -->
+    <div id="toast-boundary-anchor"></div>
+
+    <!-- Main System Interface Container -->
+    <main class="app-mainframe-container slide-in-animation">
+        
+        <!-- Public Interface Brand Header Hub -->
+        <header class="platform-header-hub">
+            <div class="brand-vector-group">
+                <h1 id="public-election-title"><span>Election</span>AI</h1>
+                <p id="public-election-desc">Loading institutional parameter specifications...</p>
+            </div>
+            <div class="flex-align-center" style="gap: 12px;">
+                <span id="timer-status-badge" class="status-badge status-standby">Syncing</span>
+                <div id="public-countdown-clock" class="metric-value" style="font-size: 1.3rem; margin-top: 0; background: rgba(15,23,42,0.4); padding: 6px 14px; border-radius: 6px; border: 1px solid var(--border-neon-grid);">
+                    00:00:00
+                </div>
+            </div>
+        </header>
+
+        <!-- Kiosk Content Grid Layout -->
+        <div class="layout-bifurcation-grid" style="grid-template-columns: 1fr;">
+            
+            <!-- Core Voting Terminal Deck Area -->
+            <section class="glassmorphism-surface">
+                <div class="panel-section-header" id="terminal-heading-context">
+                    Official Ballot Selections
+                </div>
+                
+                <!-- Notice Banner: Handled Dynamically by JavaScript System -->
+                <div id="ballot-restriction-message" class="ui-display-none-force" style="margin-bottom: 20px; padding: 14px; border-radius: var(--border-radius-standard); font-weight: 600; text-align: center;">
+                </div>
+
+                <!-- Touchscreen-Optimized Candidate Grid Matrix -->
+                <div id="public-voting-matrix" class="voting-cards-matrix">
+                    <!-- Javascript dynamically Injects Ballot Nodes here -->
+                    <div class="empty-state-vector-notice ui-text-center">
+                        Querying localized data engines for active candidate provisions...
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Full Screen Flash Success Overlay Frame -->
+    <div id="vote-success-overlay" class="success-flash-overlay flex-center-alignment ui-display-none-force">
+        <div class="success-message-card ui-text-center scale-up-animation">
+            <div class="success-check-icon">✓</div>
+            <h2>Ballot Confirmed</h2>
+            <p id="success-receipt-subtext" style="margin-top: 8px; margin-bottom: 24px;">Thank you! Your vote has been securely recorded.</p>
+            <button type="button" class="btn-action-control action-success" onclick="document.getElementById('vote-success-overlay').classList.add('ui-display-none-force')">
+                Return to Ballot
+            </button>
+        </div>
+    </div>
+
+    <!-- --- BALLOT ARCHITECTURE & SYNCHRONIZATION RUNTIME ENGINE --- -->
+    <script>
+        (function() {
+            // Configuration Lock & Identity Substrates
+            const CONST_STORAGE_KEY_PREFIX = "electionai_";
+            const BALLOT_REC_ID = "voted_receipt_status";
+
+            // Structural Nodes Cache Hook
+            const domLoader = document.getElementById("global-loader");
+            const domTitle = document.getElementById("public-election-title");
+            const domDesc = document.getElementById("public-election-desc");
+            const domBadge = document.getElementById("timer-status-badge");
+            const domClock = document.getElementById("public-countdown-clock");
+            const domMatrix = document.getElementById("public-voting-matrix");
+            const domNotice = document.getElementById("ballot-restriction-message");
+            const domSuccess = document.getElementById("vote-success-overlay");
+
+            let timerIntervalId = null;
+
+            /**
+             * Decrypts and retrieves safe key-values from Shared Storage Engine
+             */
+            function fetchSharedDataValue(key, fallback = "") {
+                try {
+                    return localStorage.getItem(CONST_STORAGE_KEY_PREFIX + key) || fallback;
+                } catch(e) {
+                    console.error("Storage vector access failure:", e);
+                    return fallback;
+                }
+            }
+
+            /**
+             * Renders visual toast notifications on touch interfaces 
+             */
+            function deployToastNotification(msg, type = "success") {
+                const anchor = document.getElementById("toast-boundary-anchor");
+                if(!anchor) return;
+                const node = document.createElement("div");
+                node.className = `toast-node toast-type-${type} slide-in-animation`;
+                node.innerText = msg;
+                anchor.appendChild(node);
+                setTimeout(() => {
+                    node.classList.add("fade-out-animation");
+                    setTimeout(() => node.remove(), 400);
+                }, 4000);
+            }
+
+            /**
+             * Runs deep checks to determine election operational phase window
+             */
+            function computeElectionPhaseWindow() {
+                const startTime = parseInt(fetchSharedDataValue("start_time", "0"), 10);
+                const endTime = parseInt(fetchSharedDataValue("end_time", "0"), 10);
+                const now = Date.now();
+
+                if (!startTime || !endTime) return "STANDBY";
+                if (now < startTime) return "PRE_ELECTION";
+                if (now >= startTime && now <= endTime) return "LIVE_ACTIVE";
+                return "ARCHIVED";
+            }
+
+            /**
+             * Tracks clock metrics, synchronizing timestamps with state machines
+             */
+            function initializeClockSynchronizer() {
+                if(timerIntervalId) clearInterval(timerIntervalId);
+
+                function tick() {
+                    const phase = computeElectionPhaseWindow();
+                    const startTime = parseInt(fetchSharedDataValue("start_time", "0"), 10);
+                    const endTime = parseInt(fetchSharedDataValue("end_time", "0"), 10);
+                    const now = Date.now();
+                    
+                    let targetDiff = 0;
+
+                    if (phase === "STANDBY") {
+                        domBadge.className = "status-badge status-standby";
+                        domBadge.innerText = "NOT CONFIG";
+                        domClock.innerText = "00:00:00";
+                        return;
+                    }
+
+                    if (phase === "PRE_ELECTION") {
+                        domBadge.className = "status-badge status-standby";
+                        domBadge.innerText = "STARTING IN";
+                        targetDiff = startTime - now;
+                    } else if (phase === "LIVE_ACTIVE") {
+                        domBadge.className = "status-badge status-live-active";
+                        domBadge.innerText = "POLLS OPEN";
+                        targetDiff = endTime - now;
+                    } else {
+                        domBadge.className = "status-badge status-archived";
+                        domBadge.innerText = "POLLS CLOSED";
+                        domClock.innerText = "00:00:00";
+                        evaluateTerminalInteractionState();
+                        return;
+                    }
+
+                    if (targetDiff < 0) targetDiff = 0;
+                    
+                    const hours = String(Math.floor(targetDiff / 3600000)).padStart(2, '0');
+                    const mins = String(Math.floor((targetDiff % 3600000) / 60000)).padStart(2, '0');
+                    const secs = String(Math.floor((targetDiff % 60000) / 1000)).padStart(2, '0');
+                    
+                    domClock.innerText = `${hours}:${mins}:${secs}`;
+                }
+
+                tick();
+                timerIntervalId = setInterval(tick, 1000);
+            }
+
+            /**
+             * Processes state locks across all elements depending on user profile and dates
+             */
+            function evaluateTerminalInteractionState() {
+                const phase = computeElectionPhaseWindow();
+                const userHasVoted = localStorage.getItem(CONST_STORAGE_KEY_PREFIX + BALLOT_REC_ID) === "true";
+                const allButtons = domMatrix.querySelectorAll(".btn-ballot-vector");
+
+                // Reset state layout classes cleanly
+                domNotice.className = "ui-display-none-force";
+
+                if (phase !== "LIVE_ACTIVE") {
+                    domNotice.className = "glassmorphism-surface action-warning";
+                    domNotice.style.background = "rgba(245, 158, 11, 0.15)";
+                    domNotice.style.color = "var(--accent-warning-glow)";
+                    domNotice.innerText = phase === "PRE_ELECTION" ? "Ballot locked. The voting window has not started." : "Voting ended. The polls are closed for this election.";
+                    
+                    allButtons.forEach(btn => {
+                        btn.className = "btn-ballot-vector disabled-state-lock";
+                        btn.disabled = true;
+                    });
+                    return;
+                }
+
+                if (userHasVoted) {
+                    domNotice.className = "glassmorphism-surface action-success";
+                    domNotice.style.background = "rgba(16, 185, 129, 0.15)";
+                    domNotice.style.color = "var(--accent-success-glow)";
+                    domNotice.innerText = "Thank you! Your vote has been recorded.";
+
+                    allButtons.forEach(btn => {
+                        btn.className = "btn-ballot-vector duplicate-state-lock";
+                        btn.disabled = true;
+                        btn.innerHTML = "✓ Ballot Registered";
+                    });
+                }
+            }
+
+            /**
+             * Processes internal click states, calculating structural mutations securely
+             */
+            window.handleSecureBallotSubmission = function(candidateId) {
+                const phase = computeElectionPhaseWindow();
+                
+                if (phase !== "LIVE_ACTIVE") {
+                    deployToastNotification("Action Rejected: Voting window is currently closed.", "danger");
+                    return;
+                }
+
+                if (localStorage.getItem(CONST_STORAGE_KEY_PREFIX + BALLOT_REC_ID) === "true") {
+                    deployToastNotification("You have already voted in this election.", "warning");
+                    evaluateTerminalInteractionState();
+                    return;
+                }
+
+                try {
+                    // Extract data records to verify candidates exist
+                    let candidates = JSON.parse(fetchSharedDataValue("candidates", "[]"));
+                    let idx = candidates.findIndex(c => String(c.id) === String(candidateId));
+
+                    if (idx === -1) {
+                        deployToastNotification("Internal Validation Error: Invalid candidate sequence.", "danger");
+                        return;
+                    }
+
+                    // Increment tally metrics securely within Local Storage engine
+                    candidates[idx].votes = (parseInt(candidates[idx].votes, 10) || 0) + 1;
+                    localStorage.setItem(CONST_STORAGE_KEY_PREFIX + "candidates", JSON.stringify(candidates));
+
+                    // Commit structural locking variables locally
+                    localStorage.setItem(CONST_STORAGE_KEY_PREFIX + BALLOT_REC_ID, "true");
+                    
+                    // Increment global ledger count cache
+                    let aggregateCount = parseInt(fetchSharedDataValue("total_votes", "0"), 10);
+                    localStorage.setItem(CONST_STORAGE_KEY_PREFIX + "total_votes", String(aggregateCount + 1));
+
+                    // Show success state
+                    domSuccess.classList.remove("ui-display-none-force");
+                    evaluateTerminalInteractionState();
+                    deployToastNotification("Your structural ballot payload has been committed.", "success");
+
+                } catch(err) {
+                    console.error("Ballot mutation routine runtime fault: ", err);
+                    deployToastNotification("Transaction failed to commit to standard ledger storage.", "danger");
+                }
+            };
+
+            /**
+             * Refreshes UI context structures seamlessly across matrix views
+             */
+            function renderPublicBallotInterface() {
+                // UI theme engine sync integration pass
+                const systemMode = fetchSharedDataValue("theme_mode", "dark");
+                if (systemMode === "light") {
+                    document.documentElement.classList.add("light-mode-substrate");
+                } else {
+                    document.documentElement.classList.remove("light-mode-substrate");
+                }
+
+                // Render contextual descriptions
+                domTitle.innerHTML = `<span>${fetchSharedDataValue("election_name", "System Core")}</span> Election`;
+                domDesc.innerText = fetchSharedDataValue("election_description", "Isolated Public Access Kiosk Instance Terminal.");
+
+                // Map configurations to dynamic HTML card matrices
+                try {
+                    const candidatesList = JSON.parse(fetchSharedDataValue("candidates", "[]"));
+                    
+                    if (candidatesList.length === 0) {
+                        domMatrix.innerHTML = `
+                            <div class="empty-state-vector-notice ui-text-center">
+                                No official candidates have been authorized or registered by the electoral administrator yet.
+                            </div>`;
+                        return;
+                    }
+
+                    domMatrix.innerHTML = "";
+                    candidatesList.forEach(cand => {
+                        // Secure fallback image architectures
+                        const photoUrl = cand.photo || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100%' height='100%' fill='%231f2937'/><text x='50%' y='55%' font-family='sans-serif' font-size='12' fill='%239ca3af' text-anchor='middle'>No Profile Image</text></svg>";
+                        const symbolUrl = cand.symbol || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'><circle cx='25' cy='25' r='20' fill='none' stroke='%233b82f6' stroke-width='2'/></svg>";
+
+                        const cardNode = document.createElement("div");
+                        cardNode.className = "glassmorphism-surface ballot-card-component rise-hover-interaction";
+                        cardNode.style.margin = "0";
+
+                        cardNode.innerHTML = `
+                            <div class="ballot-avatar-frame">
+                                <img src="${photoUrl}" class="ballot-profile-graphic" alt="${cand.name}">
+                                <img src="${symbolUrl}" class="ballot-symbol-overlay" alt="Party Emblem">
+                            </div>
+                            <div class="ballot-candidate-name-header">${cand.name}</div>
+                            <div class="ballot-candidate-party-subtext">${cand.party || "Independent Slate"}</div>
+                            <div class="ballot-action-wrapper">
+                                <button type="button" class="btn-ballot-vector" onclick="handleSecureBallotSubmission('${cand.id}')">
+                                    Cast Vote
+                                </button>
+                            </div>
+                        `;
+                        domMatrix.appendChild(cardNode);
+                    });
+
+                } catch (e) {
+                    console.error("Critical matrix generation fault sequence:", e);
+                    domMatrix.innerHTML = `<div class="empty-state-vector-notice ui-text-center" style="color:var(--accent-danger-glow);">Fatal parsing configuration matrix mismatch error.</div>`;
+                }
+
+                // Balance display logic parameters 
+                initializeClockSynchronizer();
+                evaluateTerminalInteractionState();
+            }
+
+            /**
+             * Primary entrypoint loader initialization sequence
+             */
+            function runBootstrapperLoop() {
+                renderPublicBallotInterface();
+                
+                // Remove visibility restriction locks gracefully
+                if (domLoader) {
+                    domLoader.classList.add("fade-out-animation");
+                    setTimeout(() => domLoader.remove(), 400);
+                }
+
+                // Watch structural changes made in admin pipeline view instantly
+                window.addEventListener("storage", function(event) {
+                    if (event.key && event.key.startsWith(CONST_STORAGE_KEY_PREFIX)) {
+                        renderPublicBallotInterface();
+                    }
+                });
+            }
+
+            // Fire engine loop initialization
+            if (document.readyState === "loading") {
+                document.addEventListener("DOMContentLoaded", runBootstrapperLoop);
+            } else {
+                runBootstrapperLoop();
+            }
+        })();
+    </script>
+</body>
+</html>
