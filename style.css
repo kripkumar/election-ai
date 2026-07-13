@@ -1,0 +1,630 @@
+/**
+ * ElectionAI - Core Application Stylesheet
+ * Layout Matrix: CSS Variables, Custom Themes, Flexbox/Grid Bifurcations
+ * Motion Substrate: GPU-Accelerated Animations & Transitions
+ */
+
+/* --- 1. CORE ARCHITECTURE SPECIFICATIONS --- */
+:root {
+    /* Structural Color Spectrum Mapping (Dark Substrate Engine Default) */
+    --bg-deep-space: #0b0f19;
+    --bg-glass-layer: rgba(17, 24, 39, 0.7);
+    --bg-card-substrate: rgba(31, 41, 55, 0.45);
+    --border-neon-grid: rgba(59, 130, 246, 0.15);
+    --border-neon-heavy: rgba(59, 130, 246, 0.3);
+    
+    --text-pure-white: #f3f4f6;
+    --text-neon-glow: #60a5fa;
+    --text-dim-slate: #9ca3af;
+    
+    /* Custom Injectable Accent Color Variables Managed via JS Matrix */
+    --accent-primary-vector: #3b82f6;
+    --accent-success-glow: #10b981;
+    --accent-danger-glow: #ef4444;
+    --accent-warning-glow: #f59e0b;
+    
+    /* UI System Metrics Scale Layouts */
+    --font-size-base: 1rem;
+    --border-radius-standard: 12px;
+    --glass-blur-blur: 16px;
+}
+
+/* Runtime Multi-Theme Interlocking Substrates */
+.light-mode-substrate {
+    --bg-deep-space: #f9fafb;
+    --bg-glass-layer: rgba(255, 255, 255, 0.75);
+    --bg-card-substrate: rgba(243, 244, 246, 0.85);
+    --border-neon-grid: rgba(59, 130, 246, 0.1);
+    --border-neon-heavy: rgba(59, 130, 246, 0.25);
+    --text-pure-white: #111827;
+    --text-neon-glow: #2563eb;
+    --text-dim-slate: #4b5563;
+}
+
+/* Dynamic Scale Sizing Subsystem Controls */
+html[data-ui-scale="small"] { --font-size-base: 0.875rem; }
+html[data-ui-scale="medium"] { --font-size-base: 1rem; }
+html[data-ui-scale="large"] { --font-size-base: 1.125rem; }
+
+/* General Document Structural Rules */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+body {
+    background-color: var(--bg-deep-space);
+    color: var(--text-pure-white);
+    font-size: var(--font-size-base);
+    overflow-x: hidden;
+    padding-bottom: 60px;
+}
+
+/* Global Structural Utilities */
+.ui-display-none-force { display: none !important; }
+.ui-text-center { text-align: center; }
+.ui-opacity-dim { opacity: 0.6; }
+.flex-align-center { display: flex; align-items: center; }
+.flex-center-alignment { display: flex; align-items: center; justify-content: center; }
+
+/* --- 2. LAYOUT ENGINE PANELS --- */
+.app-mainframe-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+/* Global Header Brand Control Hub */
+.platform-header-hub {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-radius: var(--border-radius-standard);
+    background: var(--bg-glass-layer);
+    backdrop-filter: blur(var(--glass-blur-blur));
+    border: 1px solid var(--border-neon-grid);
+    margin-bottom: 24px;
+}
+
+.brand-vector-group h1 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--text-pure-white);
+    letter-spacing: -0.025em;
+}
+
+.brand-vector-group h1 span {
+    color: var(--accent-primary-vector);
+}
+
+.brand-vector-group p {
+    font-size: 0.85rem;
+    color: var(--text-dim-slate);
+    margin-top: 2px;
+}
+
+/* Multi-Column High-Performance Analytical Dashboard Grid */
+.dashboard-analytics-matrix {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.metric-card-node {
+    background: var(--bg-glass-layer);
+    border: 1px solid var(--border-neon-grid);
+    padding: 20px;
+    border-radius: var(--border-radius-standard);
+    position: relative;
+    overflow: hidden;
+}
+
+.metric-card-node .metric-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--text-dim-slate);
+    letter-spacing: 0.05em;
+}
+
+.metric-card-node .metric-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-top: 8px;
+    color: var(--text-pure-white);
+    font-family: monospace;
+}
+
+/* Functional Split Interface Grid System */
+.layout-bifurcation-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+}
+
+@media (max-width: 1024px) {
+    .layout-bifurcation-grid { grid-template-columns: 1fr; }
+}
+
+/* Glassmorphism Generic Structural Interface Card */
+.glassmorphism-surface {
+    background: var(--bg-glass-layer);
+    backdrop-filter: blur(var(--glass-blur-blur));
+    border: 1px solid var(--border-neon-grid);
+    border-radius: var(--border-radius-standard);
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.panel-section-header {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    border-left: 4px solid var(--accent-primary-vector);
+    padding-left: 12px;
+    color: var(--text-pure-white);
+}
+
+/* --- 3. VOTING TERMINAL ELEMENTS --- */
+.voting-cards-matrix {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.ballot-card-component {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+}
+
+.ballot-avatar-frame {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin-bottom: 16px;
+}
+
+.ballot-profile-graphic {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--border-neon-heavy);
+}
+
+.ballot-symbol-overlay {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid var(--border-neon-heavy);
+    object-fit: contain;
+}
+
+.ballot-candidate-name-header {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-pure-white);
+}
+
+.ballot-candidate-party-subtext {
+    font-size: 0.85rem;
+    color: var(--text-dim-slate);
+    margin-top: 4px;
+    margin-bottom: 20px;
+}
+
+.ballot-action-wrapper {
+    width: 100%;
+    margin-top: auto;
+}
+
+.empty-state-vector-notice {
+    grid-column: 1 / -1;
+    padding: 40px;
+    color: var(--text-dim-slate);
+    font-style: italic;
+    font-size: 0.95rem;
+}
+
+/* --- 4. FORM AND BUTTON INPUT ARRAYS --- */
+.form-structural-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.input-group-element {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.input-group-element label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-dim-slate);
+}
+
+.input-field-vector, .select-dropdown-vector {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid var(--border-neon-grid);
+    color: var(--text-pure-white);
+    padding: 10px 14px;
+    border-radius: 8px;
+    outline: none;
+    font-size: 0.9rem;
+    width: 100%;
+}
+
+.input-field-vector:focus, .select-dropdown-vector:focus {
+    border-color: var(--accent-primary-vector);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.btn-action-control, .btn-ballot-vector {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    width: 100%;
+    color: #fff;
+    background: var(--accent-primary-vector);
+    gap: 8px;
+}
+
+.btn-action-control:hover, .btn-ballot-vector:hover {
+    filter: brightness(1.15);
+}
+
+/* Custom Action Variant Colors */
+.action-success { background: var(--accent-success-glow); }
+.action-danger { background: var(--accent-danger-glow); }
+.action-warning { background: var(--accent-warning-glow); }
+.action-purge { 
+    background: rgba(239, 68, 68, 0.15); 
+    color: var(--accent-danger-glow); 
+    border: 1px solid rgba(239, 68, 68, 0.3); 
+}
+.action-purge:hover { 
+    background: var(--accent-danger-glow); 
+    color: #fff; 
+}
+
+/* Lock States */
+.disabled-state-lock { background: #4b5563 !important; color: #9ca3af !important; cursor: not-allowed !important; filter: none !important; }
+.duplicate-state-lock { background: rgba(245, 158, 11, 0.15) !important; color: var(--accent-warning-glow) !important; border: 1px solid rgba(245, 158, 11, 0.3); cursor: not-allowed !important; }
+
+/* --- 5. DATA LEDGER MANAGEMENT MATRIX --- */
+.table-scrolling-container {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 16px;
+}
+
+.ledger-data-matrix {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+.ledger-data-matrix th {
+    padding: 12px 16px;
+    border-bottom: 2px solid var(--border-neon-grid);
+    color: var(--text-dim-slate);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+}
+
+.ledger-data-matrix td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border-neon-grid);
+    color: var(--text-pure-white);
+    vertical-align: middle;
+}
+
+.ledger-thumb-pic {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 12px;
+    border: 1px solid var(--border-neon-heavy);
+}
+
+.badge-count-vector {
+    background: rgba(59, 130, 246, 0.15);
+    color: var(--text-neon-glow);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 700;
+}
+
+/* Status Configuration Badges */
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.025em;
+}
+.status-standby { background: rgba(245, 158, 11, 0.15); color: var(--accent-warning-glow); }
+.status-live-active { background: rgba(16, 185, 129, 0.15); color: var(--accent-success-glow); }
+.status-archived { background: rgba(239, 68, 68, 0.15); color: var(--accent-danger-glow); }
+
+/* --- 6. AI CONVERSATIONAL ASSISTANT SYSTEM --- */
+.ai-assistant-frame {
+    display: flex;
+    flex-direction: column;
+    height: 480px;
+    background: var(--bg-glass-layer);
+    border: 1px solid var(--border-neon-grid);
+    border-radius: var(--border-radius-standard);
+    overflow: hidden;
+}
+
+.chat-logs-viewport {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: rgba(10, 15, 26, 0.4);
+}
+
+.chat-bubble-row {
+    display: flex;
+    gap: 12px;
+    max-width: 85%;
+}
+
+.bubble-role-user {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+}
+
+.bubble-role-assistant {
+    align-self: flex-start;
+}
+
+.chat-bubble-avatar-identifier {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    background: var(--border-neon-heavy);
+    color: var(--text-neon-glow);
+    flex-shrink: 0;
+}
+
+.bubble-role-user .chat-bubble-avatar-identifier {
+    background: rgba(16, 185, 129, 0.2);
+    color: var(--accent-success-glow);
+}
+
+.chat-bubble-text-payload {
+    background: var(--bg-card-substrate);
+    padding: 12px 16px;
+    border-radius: var(--border-radius-standard);
+    font-size: 0.875rem;
+    line-height: 1.4;
+    color: var(--text-pure-white);
+    border: 1px solid var(--border-neon-grid);
+}
+
+.bubble-role-user .chat-bubble-text-payload {
+    background: var(--accent-primary-vector);
+    color: #ffffff;
+    border: none;
+}
+
+.chat-input-dock-panel {
+    display: flex;
+    padding: 12px;
+    background: var(--bg-glass-layer);
+    border-top: 1px solid var(--border-neon-grid);
+    gap: 8px;
+}
+
+/* --- 7. HARDWARE ACCELERATED ANIMATION TRANSLATIONS --- */
+.rise-hover-interaction {
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s;
+}
+.rise-hover-interaction:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px -10px rgba(59, 130, 246, 0.3);
+}
+
+.slide-in-animation {
+    animation: slideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes slideIn {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.scale-up-animation {
+    animation: scaleUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+@keyframes scaleUp {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.fade-out-animation {
+    animation: fadeOut 0.4s ease forwards !important;
+}
+@keyframes fadeOut {
+    to { opacity: 0; transform: translateY(-10px); remove; }
+}
+
+.processing-pulse-vector {
+    animation: processingPulse 1.5s infinite ease-in-out;
+}
+@keyframes processingPulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; color: var(--text-neon-glow); }
+}
+
+.disable-motion-vectors * {
+    animation: none !important;
+    transition: none !important;
+}
+
+/* --- 8. FLOATING GRAPHICAL OVERLAYS --- */
+#global-loader {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: var(--bg-deep-space);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.spinner-ring {
+    width: 50px; height: 50px;
+    border: 3px solid var(--border-neon-grid);
+    border-top-color: var(--accent-primary-vector);
+    border-radius: 50%;
+    animation: loopSpin 0.8s linear infinite;
+}
+@keyframes loopSpin { to { transform: rotate(360deg); } }
+
+#toast-boundary-anchor {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 380px;
+}
+
+.toast-node {
+    background: #1f2937;
+    border-left: 4px solid var(--accent-primary-vector);
+    color: #fff;
+    padding: 14px 20px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.4);
+}
+.toast-type-success { border-left-color: var(--accent-success-glow); }
+.toast-type-danger { border-left-color: var(--accent-danger-glow); }
+.toast-type-warning { border-left-color: var(--accent-warning-glow); }
+
+/* Full Screen Winner Frame Overlay */
+.winner-announcement-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(7, 10, 19, 0.95);
+    z-index: 900;
+    backdrop-filter: blur(8px);
+}
+
+#confetti-canvas-plane {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 901;
+}
+
+.winner-display-card {
+    background: linear-gradient(135deg, rgba(17,24,39,0.9), rgba(31,41,55,0.8));
+    border: 2px solid var(--accent-warning-glow);
+    padding: 40px;
+    border-radius: 20px;
+    max-width: 480px;
+    width: 90%;
+    position: relative;
+    z-index: 902;
+    box-shadow: 0 0 40px rgba(245, 158, 11, 0.2);
+}
+
+.winner-avatar-large {
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--accent-warning-glow);
+    margin: 0 auto 20px;
+    display: block;
+}
+
+/* Flash Screen Success Framework */
+.success-flash-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(11, 15, 25, 0.85);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+}
+
+.success-message-card {
+    background: #1f2937;
+    border: 1px solid var(--border-neon-heavy);
+    padding: 32px;
+    border-radius: 16px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);
+}
+
+.success-check-icon {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--accent-success-glow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    font-weight: bold;
+    margin: 0 auto 16px;
+}
+
+.success-message-card h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.success-message-card p {
+    font-size: 0.9rem;
+    color: var(--text-dim-slate);
+}
+
+/* Visualization Chart Frame Bounds */
+.chart-rendering-canvas-boundary {
+    position: relative;
+    height: 220px;
+    width: 100%;
+}
