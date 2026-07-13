@@ -90,30 +90,14 @@
     const scanBtn = document.getElementById('scanBtn');
     const statusDisplay = document.getElementById('statusDisplay');
 
-    // 1. Core Rule: Block users immediately if they have a registry block inside LocalStorage
+    // Initialize kiosk environment smoothly
     window.addEventListener('DOMContentLoaded', () => {
-        checkVoteRegistryStatus();
+        statusDisplay.textContent = "System checking device baseline...";
         startWebcam();
     });
 
-    function checkVoteRegistryStatus() {
-        if (localStorage.getItem('has_voted_registry_token') === 'true') {
-            scanBtn.disabled = true;
-            statusDisplay.textContent = "Access Denied: A submission has already been registered from this terminal device.";
-            statusDisplay.className = "warning-banner";
-            // Stop video tracks if already active
-            if (video.srcObject) {
-                video.srcObject.getTracks().forEach(track => track.stop());
-            }
-            return true;
-        }
-        return false;
-    }
-
-    // Initialize Webcam Streams Safely
+    // Initialize Webcam Streams Safely (Terminal always stays active for new users)
     async function startWebcam() {
-        if (localStorage.getItem('has_voted_registry_token') === 'true') return;
-        
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ 
                 video: { width: 640, height: 480 } 
@@ -127,16 +111,13 @@
         }
     }
 
-    // 2. Capture, Frame Compression, and Single Execution Rules Loop
+    // Capture, Frame Compression, and Single Execution Rules Loop
     async function captureAndSendFrame() {
-        // Double-check block right at trigger execution moment
-        if (checkVoteRegistryStatus()) return;
-
         scanBtn.disabled = true;
         statusDisplay.textContent = "Processing image snapshot transmission...";
         statusDisplay.className = "";
 
-        // Downscale capture dimensions targeting optimized AI Vision shapes to drastically reduce payload sizes
+        // Downscale capture dimensions targeting optimized AI Vision shapes
         const ctx = canvas.getContext('2d');
         canvas.width = 640;
         canvas.height = 480;
@@ -144,8 +125,7 @@
         // Draw image frame to hidden scaling viewport matrix
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         
-        // Output compressed payload safely skipping headers explicitly
-        // 0.65 forces high JPEG extraction compression balancing quality against raw sizes
+        // Output compressed payload balancing quality against raw sizes
         const rawDataUrl = canvas.toDataURL('image/jpeg', 0.65);
         const base64DataPayload = rawDataUrl.split(',')[1]; 
 
@@ -161,20 +141,22 @@
             const result = await response.json();
 
             if (response.ok && result.success) {
-                // LOCK THE TERMINAL INSTANTLY ON BACKEND VERIFICATION SUCCESS
-                localStorage.setItem('has_voted_registry_token', 'true');
-                
-                statusDisplay.textContent = `Vote verified successfully! Text Detected: "${result.detectedText || 'Verified'}". Terminal locked.`;
+                // SUCCESS: Vote processed perfectly.
+                statusDisplay.textContent = `Vote verified successfully! Text Detected: "${result.detectedText || 'Verified'}". Ready for next user.`;
                 statusDisplay.className = "success-banner";
                 
-                // Kill camera to explicitly indicate process destruction state
-                if (video.srcObject) {
-                    video.srcObject.getTracks().forEach(track => track.stop());
-                }
+                // Keep terminal active! Flash a quick success sign, then clear for the next person
+                setTimeout(() => {
+                    scanBtn.disabled = false;
+                    statusDisplay.textContent = "Ready for next user. Position ballot and click verify.";
+                    statusDisplay.className = "";
+                }, 4000);
+
             } else {
-                // If the worker threw an explicit structural validation failure, display it
+                // ACCESSED BLOCKED FOR THIS GUY ONLY: 
+                // Display error (e.g. "Duplicate signature detected"), but keep scanner alive for another person
                 scanBtn.disabled = false;
-                statusDisplay.textContent = `Verification Error: ${result.error || 'Server processing error. Please try again.'}`;
+                statusDisplay.textContent = `Verification Error: ${result.error || 'Submission restricted.'}`;
                 statusDisplay.className = "warning-banner";
             }
 
