@@ -67,6 +67,51 @@
         canvas {
             display: none;
         }
+        /* Visual log section showing who has already voted */
+        .admin-logs {
+            max-width: 600px;
+            width: 100%;
+            margin-top: 25px;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            box-sizing: border-box;
+            text-align: left;
+        }
+        .logs-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 5px;
+        }
+        .voter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            gap: 10px;
+        }
+        .voter-card {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 4px;
+            text-align: center;
+            background: #fafafa;
+        }
+        .voter-card img {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        .voter-id {
+            font-size: 10px;
+            color: #777;
+            margin-top: 3px;
+            font-family: monospace;
+        }
     </style>
 </head>
 <body>
@@ -84,19 +129,28 @@
     <div id="statusDisplay">Initializing video feed context...</div>
 </div>
 
+<!-- Admin Verification Section to view previous voters -->
+<div class="admin-logs">
+    <div class="logs-title">Registered Voter Database Logs</div>
+    <div class="voter-grid" id="voterGrid"></div>
+</div>
+
 <script>
     const video = document.getElementById('webcam');
     const canvas = document.getElementById('captureCanvas');
     const scanBtn = document.getElementById('scanBtn');
     const statusDisplay = document.getElementById('statusDisplay');
     const instructionText = document.getElementById('instructionText');
+    const voterGrid = document.getElementById('voterGrid');
 
     let currentStep = "ENROLL"; // Steps: ENROLL -> VERIFY
     let enrolledFacePayload = null;
+    let enrolledFaceHash = null;
 
     window.addEventListener('DOMContentLoaded', () => {
         statusDisplay.textContent = "System checking device baseline...";
         startWebcam();
+        renderVoterLogs();
     });
 
     async function startWebcam() {
@@ -115,6 +169,7 @@
     function resetToEnrollmentStep() {
         currentStep = "ENROLL";
         enrolledFacePayload = null;
+        enrolledFaceHash = null;
         scanBtn.disabled = false;
         scanBtn.textContent = "Step 1: Capture Face Photo";
         instructionText.textContent = "Look directly at the camera to snapshot your face signature.";
@@ -131,16 +186,68 @@
         return rawDataUrl.split(',')[1];
     }
 
+    // Helper functions to pull/save from storage array database
+    function getVoterRegistry() {
+        const data = localStorage.getItem('kiosk_voter_registry');
+        return data ? JSON.parse(data) : [];
+    }
+
+    function saveVoterRegistry(registry) {
+        localStorage.setItem('kiosk_voter_registry', JSON.stringify(registry));
+    }
+
+    function renderVoterLogs() {
+        const registry = getVoterRegistry();
+        voterGrid.innerHTML = '';
+        if (registry.length === 0) {
+            voterGrid.innerHTML = '<span style="color:#aaa; font-size:12px;">No logged submissions yet.</span>';
+            return;
+        }
+        registry.forEach(voter => {
+            const card = document.createElement('div');
+            card.className = 'voter-card';
+            card.innerHTML = `<img src="${voter.thumbnail}"><div class="voter-id">ID: ${voter.id}</div>`;
+            voterGrid.appendChild(card);
+        });
+    }
+
     function handleKioskAction() {
         if (currentStep === "ENROLL") {
-            // Snapshot the initial user face identity lock
+            // 1. Capture the structural face profile string
+            const ctx = canvas.getContext('2d');
+            canvas.width = 160;
+            canvas.height = 160;
+            ctx.drawImage(video, 240, 160, 160, 160, 0, 0, 160, 160);
+            
+            const thumbUrl = canvas.toDataURL('image/jpeg', 0.5);
+            const faceHash = generateVisualHash(ctx);
+            
+            // 2. Scan history data array to verify uniqueness
+            const registry = getVoterRegistry();
+            let hasVoted = false;
+            for (let voter of registry) {
+                if (calculateHammingDistance(faceHash, voter.hash) < 5) {
+                    hasVoted = true;
+                    break;
+                }
+            }
+
+            if (hasVoted) {
+                statusDisplay.textContent = "ACCESS DENIED: Dual submission alert! This face signature has already cast a ballot.";
+                statusDisplay.className = "warning-banner";
+                return;
+            }
+
+            // Target lock cleared! Save values for Step 2 validation sequence
             enrolledFacePayload = captureFrameBase64();
+            enrolledFaceHash = faceHash;
             currentStep = "VERIFY";
             
             scanBtn.textContent = "Step 2: Verify & Submit Vote";
             instructionText.textContent = "Position your printed ballot inside the terminal camera frame.";
-            statusDisplay.textContent = "Face locked. Now align your ballot paper and click submit.";
+            statusDisplay.textContent = "Face structure verified. Now align your ballot paper and click submit.";
             statusDisplay.className = "success-banner";
+
         } else if (currentStep === "VERIFY") {
             submitBallotAndVerifyFace();
         }
@@ -153,13 +260,16 @@
 
         const currentBallotAndFacePayload = captureFrameBase64();
 
+        // Prepare thumbnail snapshot to display in history logs before clear down
+        const ctx = canvas.getContext('2d');
+        canvas.width = 120; canvas.height = 120;
+        ctx.drawImage(video, 260, 180, 120, 120, 0, 0, 120, 120);
+        const logThumbnail = canvas.toDataURL('image/jpeg', 0.4);
+
         try {
-            // Sends BOTH payloads to Cloudflare Worker to enforce face similarity checks on the backend
             const response = await fetch('https://electionai.180011.workers.dev/', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
                     faceLockImage: enrolledFacePayload,
                     ballotSubmissionImage: currentBallotAndFacePayload 
@@ -169,6 +279,16 @@
             const result = await response.json();
 
             if (response.ok && result.success) {
+                // SUCCESS: Save profile data to historical cache block array
+                const registry = getVoterRegistry();
+                registry.push({
+                    id: Math.floor(1000 + Math.random() * 9000),
+                    hash: enrolledFaceHash,
+                    thumbnail: logThumbnail
+                });
+                saveVoterRegistry(registry);
+                renderVoterLogs();
+
                 statusDisplay.textContent = `Vote verified successfully! Text: "${result.detectedText || 'Verified'}". Resetting kiosk...`;
                 statusDisplay.className = "success-banner";
                 
@@ -177,7 +297,6 @@
                 }, 4000);
 
             } else {
-                // Keep the terminal from breaking completely. Block submission, but keep step active for correcting positioning.
                 scanBtn.disabled = false;
                 statusDisplay.textContent = `Verification Error: ${result.error || 'Submission restricted.'}`;
                 statusDisplay.className = "warning-banner";
@@ -189,6 +308,26 @@
             statusDisplay.className = "warning-banner";
             console.error("Pipeline failure logged:", error);
         }
+    }
+
+    // Mathematical Image Processing Fingerprint Logic
+    function generateVisualHash(ctx) {
+        const imgData = ctx.getImageData(0, 0, 160, 160).data;
+        let pixels = [];
+        for (let row = 0; row < 8; row++) {
+            for (let col = 0; col < 8; col++) {
+                let r = 0, g = 0, b = 0, idx = (row * 20 * 160 + col * 20) * 4;
+                pixels.push((imgData[idx] + imgData[idx+1] + imgData[idx+2]) / 3);
+            }
+        }
+        let mean = pixels.reduce((a, b) => a + b, 0) / 64;
+        return pixels.map(p => p >= mean ? "1" : "0").join('');
+    }
+
+    function calculateHammingDistance(h1, h2) {
+        let diffs = 0;
+        for (let i = 0; i < h1.length; i++) if (h1[i] !== h2[i]) diffs++;
+        return diffs;
     }
 </script>
 
