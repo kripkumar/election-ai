@@ -1,7 +1,7 @@
 /**
  * ElectionAI - Production Grade Core Application Script
  * Architecture: Object-Oriented State-Driven Vanilla JavaScript
- * Features: Multi-lingual, Live Charts, Secure LocalStorage, Automated Election Timers, Worker AI Gateway
+ * Features: English Native UI, Live Charts, Secure LocalStorage, Automated Election Timers, Worker AI Gateway
  */
 
 class ElectionApp {
@@ -25,8 +25,7 @@ class ElectionApp {
                 theme: "dark", // dark | light
                 accentColor: "#3b82f6", // default hex color matching css variables
                 fontSize: "medium", // small | medium | large
-                animationsEnabled: true,
-                language: "en" // en | hi | te
+                animationsEnabled: true
             },
             chatHistory: []
         };
@@ -34,98 +33,7 @@ class ElectionApp {
         // --- 2. LOCAL DATA STORAGE KEY CONFIGURATIONS ---
         this.STORAGE_KEY = "ELECTION_AI_SECURE_STORAGE_STATE";
 
-        // --- 3. DICTIONARY LOCALIZATION RESOURCES (EN, HI, TE) ---
-        this.translations = {
-            en: {
-                appName: "ElectionAI",
-                adminTitle: "Administrative Gateway",
-                loginBtn: "Authenticate System",
-                startElection: "Initialize Live Election",
-                endElection: "Terminate Election Window",
-                resetElection: "Purge System Data",
-                addCandidate: "Enroll Candidate Profile",
-                editCandidate: "Modify Candidate",
-                deleteCandidate: "Purge Candidate",
-                saveCandidate: "Commit Candidate to Ledger",
-                voteButton: "Cast Secure Vote",
-                duplicateVoteAlert: "Security Breach: Duplicate Vote Detected on this machine hardware fingerprint.",
-                electionClosed: "ELECTION SESSION CLOSED",
-                totalCandidates: "Total Candidates",
-                votesCast: "Aggregated Votes Cast",
-                electionStatus: "System Status",
-                timeRemaining: "Time Remaining Vector",
-                leadingCandidate: "Frontrunner Candidate",
-                totalVoters: "Registered Unique Terminals",
-                winnerScreenTitle: "Consensus Finality Met - Declared Winner",
-                aiPlaceholder: "Ask ElectionAI regarding encryption protocol or platform diagnostics...",
-                darkMode: "Substrate Dark Mode",
-                lightMode: "Substrate Light Mode",
-                statusActive: "LIVE & COLLECTING CONSENSUS",
-                statusPending: "INITIALIZED / STANDBY MODE",
-                statusClosed: "ARCHIVED & TERMINATED",
-                welcomeChat: "System online. Ask me about voter security, platform architecture, or cryptographic counters."
-            },
-            hi: {
-                appName: "इलेक्शनAI (ElectionAI)",
-                adminTitle: "प्रशासनिक प्रवेश द्वार",
-                loginBtn: "प्रणाली प्रमाणित करें",
-                startElection: "सक्रिय चुनाव शुरू करें",
-                endElection: "चुनाव विंडो समाप्त करें",
-                resetElection: "सिस्टम डेटा मिटाएं",
-                addCandidate: "उम्मीदवार प्रोफाइल दर्ज करें",
-                editCandidate: "उम्मीदवार बदलें",
-                deleteCandidate: "उम्मीदवार हटाएं",
-                saveCandidate: "उम्मीदवार लेजर में सहेजें",
-                voteButton: "सुरक्षित मत डालें",
-                duplicateVoteAlert: "सुरक्षा चेतावनी: इस मशीन पर डुप्लिकेट वोट का पता चला है।",
-                electionClosed: "चुनाव सत्र बंद है",
-                totalCandidates: "कुल उम्मीदवार",
-                votesCast: "कुल डाले गए वोट",
-                electionStatus: "सिस्टम की स्थिति",
-                timeRemaining: "शेष समय वेक्टर",
-                leadingCandidate: "अग्रणी उम्मीदवार",
-                totalVoters: "पंजीकृत अद्वितीय टर्मिनल",
-                winnerScreenTitle: "सर्वसम्मति समाप्त - विजेता घोषित",
-                aiPlaceholder: "एन्क्रिप्शन प्रोटोकॉल या प्लेटफ़ॉर्म डायग्नोस्टिक्स के बारे में पूछें...",
-                darkMode: "डार्क मोड",
-                lightMode: "लाइट मोड",
-                statusActive: "सक्रिय और लाइव",
-                statusPending: "स्टैंडबाय मोड",
-                statusClosed: "संग्रहीत और समाप्त",
-                welcomeChat: "सिस्टम ऑनलाइन है। वोटर सुरक्षा या क्रिप्टोग्राफिक काउंटर के बारे में पूछें।"
-            },
-            te: {
-                appName: "ఎలక్షన్AI (ElectionAI)",
-                adminTitle: "పరిపాలనా గేట్‌వే",
-                loginBtn: "సిస్టమ్ ధృవీకరించు",
-                startElection: "ఎన్నికలను ప్రారంభించు",
-                endElection: "ఎన్నికల విండో ముగించు",
-                resetElection: "సిస్టమ్ డేటాను తొలగించు",
-                addCandidate: "అభ్యర్థి ప్రొఫైల్ నమోదు చేయి",
-                editCandidate: "అభ్యర్థిని సవరించు",
-                deleteCandidate: "అభ్యర్థిని తొలగించు",
-                saveCandidate: "అభ్యర్థిని లెడ్జర్‌లో సేవ్ చేయి",
-                voteButton: "సురక్షిత ఓటు వేయండి",
-                duplicateVoteAlert: "భద్రతా హెచ్చరిక: ఈ మిషన్‌లో డూప్లికేట్ ఓటు కనుగొనబడింది.",
-                electionClosed: "ఎన్నికల సెషన్ ముగిసింది",
-                totalCandidates: "మొత్తం అభ్యర్థులు",
-                votesCast: "మొత్తం పోలైన ఓట్లు",
-                electionStatus: "సిస్టమ్ స్థితి",
-                timeRemaining: "మిగిలి ఉన్న సమయం",
-                leadingCandidate: "ముందంజలో ఉన్న అభ్యర్థి",
-                totalVoters: "నమోదిత ప్రత్యేక టెర్మినల్స్",
-                winnerScreenTitle: "ఎన్నికల ఫలితం - విజేత ప్రకటన",
-                aiPlaceholder: "ఎన్‌క్రిప్షన్ ప్రోటోకాల్ లేదా ప్లాట్‌ఫారమ్ డయాగ్నోస్టిక్స్ గురించి అడగండి...",
-                darkMode: "డార్క్ మోడ్",
-                lightMode: "లైట్ మోడ్",
-                statusActive: "లైవ్ & యాక్టివ్",
-                statusPending: "స్టాండ్‌బై మోడ్",
-                statusClosed: "ముగిసింది & ఆర్కైవ్ చేయబడింది",
-                welcomeChat: "సిస్టమ్ ఆన్‌లైన్‌లో ఉంది. ఓటరు భద్రత లేదా క్రిప్టోగ్రాఫిక్ కౌంటర్ల గురించి నన్ను అడగండి."
-            }
-        };
-
-        // --- 4. ENGINE CORE INSTANCES ---
+        // --- 3. ENGINE CORE INSTANCES ---
         this.charts = {
             pie: null,
             bar: null
@@ -151,11 +59,10 @@ class ElectionApp {
         this.renderCandidateManagementTable();
         this.updateLiveDashboardMetrics();
         this.evaluateWinnerStateWindow();
-        this.translateUIElements();
 
         // Push initial AI greeting message trace safely
         if (this.state.chatHistory.length === 0) {
-            this.appendChatMessage("assistant", this.getTranslation("welcomeChat"));
+            this.appendChatMessage("assistant", "System online. Ask me about voter security, platform architecture, or cryptographic counters.");
         }
     }
 
@@ -218,8 +125,7 @@ class ElectionApp {
             settingTheme: document.getElementById("opt-setting-theme"),
             settingAccent: document.getElementById("opt-setting-accent"),
             settingFont: document.getElementById("opt-setting-font"),
-            settingAnim: document.getElementById("opt-setting-animations"),
-            settingLang: document.getElementById("opt-setting-lang")
+            settingAnim: document.getElementById("opt-setting-animations")
         };
     }
 
@@ -254,7 +160,6 @@ class ElectionApp {
         if (this.dom.settingAccent) this.dom.settingAccent.addEventListener("input", (e) => this.updateSettingParameter("accentColor", e.target.value));
         if (this.dom.settingFont) this.dom.settingFont.addEventListener("change", (e) => this.updateSettingParameter("fontSize", e.target.value));
         if (this.dom.settingAnim) this.dom.settingAnim.addEventListener("change", (e) => this.updateSettingParameter("animationsEnabled", e.target.checked));
-        if (this.dom.settingLang) this.dom.settingLang.addEventListener("change", (e) => this.updateSettingParameter("language", e.target.value));
     }
 
     /**
@@ -327,7 +232,6 @@ class ElectionApp {
         this.state.settings[key] = value;
         this.synchronizeStateToStorage();
         this.applySettingsAndTheme();
-        if (key === "language") this.translateUIElements();
     }
 
     /**
@@ -364,32 +268,6 @@ class ElectionApp {
         if (this.dom.settingAccent) this.dom.settingAccent.value = config.accentColor;
         if (this.dom.settingFont) this.dom.settingFont.value = config.fontSize;
         if (this.dom.settingAnim) this.dom.settingAnim.checked = config.animationsEnabled;
-        if (this.dom.settingLang) this.dom.settingLang.value = config.language;
-    }
-
-    /**
-     * Translates application string sets across supported localized matrices
-     */
-    getTranslation(key) {
-        const lang = this.state.settings.language || "en";
-        return this.translations[lang][key] || this.translations["en"][key] || key;
-    }
-
-    /**
-     * Scans UI mapping keys using custom attributes to automatically swap languages dynamically
-     */
-    translateUIElements() {
-        const targetedNodes = document.querySelectorAll("[data-i18n-vector]");
-        targetedNodes.forEach(node => {
-            const dictionaryKey = node.getAttribute("data-i18n-vector");
-            if (dictionaryKey) {
-                node.innerText = this.getTranslation(dictionaryKey);
-            }
-        });
-
-        if (this.dom.chatInput) {
-            this.dom.chatInput.placeholder = this.getTranslation("aiPlaceholder");
-        }
     }
 
     /**
@@ -597,9 +475,7 @@ class ElectionApp {
     removeCandidateRecordEntry(candidateId) {
         if (!this.state.isAdminAuthenticated) return;
         
-        // Remove matching structural data layers
         this.state.candidates = this.state.candidates.filter(c => c.id !== candidateId);
-        // Clean out any associated ballot counters linked directly to candidate indexes
         this.state.votes = this.state.votes.filter(v => v.candidateId !== candidateId);
 
         this.synchronizeStateToStorage();
@@ -625,7 +501,6 @@ class ElectionApp {
 
         this.state.candidates.forEach(cand => {
             const row = document.createElement("tr");
-            
             const voteCount = this.state.votes.filter(v => v.candidateId === cand.id).length;
 
             row.innerHTML = `
@@ -679,7 +554,7 @@ class ElectionApp {
             if (isClosed) {
                 actionButtonStateHtml = `<button class="btn-ballot-vector disabled-state-lock" disabled>Session Locked</button>`;
             } else if (hasVoted) {
-                actionButtonStateHtml = `<button class="btn-ballot-vector duplicate-state-lock" disabled>Vote Recorded</button>`;
+                actionButtonStateHtml = `<button class="btn-ballot-vector duplicate-state-lock" disabled>You have already voted.</button>`;
             } else {
                 actionButtonStateHtml = `<button class="btn-ballot-vector action-cast-ballot" data-candidate-target="${cand.id}">Cast Secure Ballot</button>`;
             }
@@ -715,7 +590,7 @@ class ElectionApp {
 
         // Security assertion validation layer: Ensure voter duplication tracking is functional
         if (this.state.voters[hardwareHash] === true) {
-            this.dispatchToastNotification(this.getTranslation("duplicateVoteAlert"), "danger");
+            this.dispatchToastNotification("Security Breach: Duplicate Vote Detected on this machine hardware fingerprint.", "danger");
             this.renderVotingInterface();
             return;
         }
@@ -741,8 +616,6 @@ class ElectionApp {
         this.renderVotingInterface();
         
         this.dispatchToastNotification("Consensus confirmed. Vote securely committed to local state data stores.", "success");
-        
-        // Execute dynamic graphical interface success micro-animations
         this.triggerVoteSuccessAnimation();
     }
 
@@ -780,13 +653,13 @@ class ElectionApp {
         // Configuration State Parsing Values
         if (this.dom.dashStatus) {
             if (this.state.config.isArchived) {
-                this.dom.dashStatus.innerText = this.getTranslation("statusClosed");
+                this.dom.dashStatus.innerText = "ARCHIVED & TERMINATED";
                 this.dom.dashStatus.className = "status-badge status-archived";
             } else if (this.state.config.isActive) {
-                this.dom.dashStatus.innerText = this.getTranslation("statusActive");
+                this.dom.dashStatus.innerText = "LIVE & COLLECTING CONSENSUS";
                 this.dom.dashStatus.className = "status-badge status-live-active";
             } else {
-                this.dom.dashStatus.innerText = this.getTranslation("statusPending");
+                this.dom.dashStatus.innerText = "INITIALIZED / STANDBY MODE";
                 this.dom.dashStatus.className = "status-badge status-standby";
             }
         }
@@ -849,9 +722,6 @@ class ElectionApp {
 
         if (!ctxPie || !ctxBar) return;
 
-        // Define premium application presentation color arrays
-        const palette = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899", "#14b8a6"];
-
         this.charts.pie = new Chart(ctxPie, {
             type: "pie",
             data: {
@@ -912,13 +782,11 @@ class ElectionApp {
         const baseColors = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899", "#14b8a6"];
         const backgroundColors = labels.map((_, i) => baseColors[i % baseColors.length]);
 
-        // Rehydrate Pie Chart Core Data Maps
         this.charts.pie.data.labels = labels;
         this.charts.pie.data.datasets[0].data = dataValues;
         this.charts.pie.data.datasets[0].backgroundColor = backgroundColors;
         this.charts.pie.update();
 
-        // Rehydrate Bar Chart Core Data Maps
         this.charts.bar.data.labels = labels;
         this.charts.bar.data.datasets[0].data = dataValues;
         this.charts.bar.data.datasets[0].backgroundColor = backgroundColors;
@@ -940,14 +808,12 @@ class ElectionApp {
                 return;
             }
 
-            // Parse targets using standardized date constructors
             const targetTimestampStr = `${config.electionDate}T${config.endTime}:00`;
             const targetTime = new Date(targetTimestampStr).getTime();
             const now = new Date().getTime();
             const distance = targetTime - now;
 
             if (this.state.config.isActive && distance <= 0) {
-                // Time context limit reached: Execute automated atomic consolidation procedures
                 this.state.config.isActive = false;
                 this.state.config.isArchived = true;
                 this.synchronizeStateToStorage();
@@ -957,10 +823,8 @@ class ElectionApp {
                 this.dispatchToastNotification("System Core Broadcast: Election time frame window expired. Terminals safely stored.", "info");
             }
 
-            // Display computations updating interface values directly
             if (distance < 0 || this.state.config.isArchived) {
-                const closedLabel = this.getTranslation("electionClosed");
-                if (this.dom.timerCountdownDisplay) this.dom.timerCountdownDisplay.innerText = closedLabel;
+                if (this.dom.timerCountdownDisplay) this.dom.timerCountdownDisplay.innerText = "ELECTION CLOSED";
                 if (this.dom.dashTimer) this.dom.dashTimer.innerText = "00:00:00";
             } else {
                 const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -976,7 +840,7 @@ class ElectionApp {
     }
 
     /**
-     * Determines whether system configuration states match the requirements to compile full winner overlay views
+     * Validates and compiles winner screen parameters
      */
     evaluateWinnerStateWindow() {
         if (!this.dom.winnerScreenOverlay) return;
@@ -989,7 +853,7 @@ class ElectionApp {
                 document.getElementById("winner-avatar-graphic").src = leader.photo;
                 document.getElementById("winner-name-vector").innerText = leader.name;
                 document.getElementById("winner-party-vector").innerText = leader.party;
-                document.getElementById("winner-metrics-breakdown").innerText = `Aggregated Total: ${leader.votes} Total Votes Filed (${leader.percentage}% Matrix Consensus Allocation Profile)`;
+                document.getElementById("winner-metrics-breakdown").innerText = `Total: ${leader.votes} Votes (${leader.percentage}% Consensus Allocation)`;
                 
                 this.dom.winnerScreenOverlay.classList.remove("ui-display-none-force");
                 this.triggerConfettiAnimationSequence();
@@ -1003,7 +867,6 @@ class ElectionApp {
      * Triggers canvas confetti particles to announce clean election completion
      */
     triggerConfettiAnimationSequence() {
-        // Safe programmatic injection of canvas canvas overlays to render geometric confetti particle streams
         let canvas = document.getElementById("confetti-canvas-plane");
         if (!canvas) {
             canvas = document.createElement("canvas");
@@ -1046,7 +909,6 @@ class ElectionApp {
                 ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 2);
                 ctx.stroke();
 
-                // Loop particles back to top of screen if they fall out of viewport bounds
                 if (p.y > canvas.height) {
                     particles[idx] = {
                         ...p,
@@ -1057,7 +919,6 @@ class ElectionApp {
                 }
             });
 
-            // Halt animation updates safely if the overlay interface closes out of viewport space
             if (!this.dom.winnerScreenOverlay.classList.contains("ui-display-none-force")) {
                 animationFrameId = requestAnimationFrame(drawFrame);
             } else {
@@ -1068,7 +929,6 @@ class ElectionApp {
 
         drawFrame();
 
-        // Handle resize events to maintain canvas bounds fluidly
         window.addEventListener("resize", () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
@@ -1087,7 +947,6 @@ class ElectionApp {
             return;
         }
 
-        // Construct CSV string segments carefully conforming to RFC guidelines
         let csvContent = "data:text/csv;charset=utf-8,";
         csvContent += "Candidate Name,Party Affiliation,Recorded Votes,Consensus Percentage,Extraction Date\n";
 
@@ -1138,7 +997,6 @@ class ElectionApp {
         this.dom.chatInput.value = "";
         this.appendChatMessage("user", query);
 
-        // Append high tech typing trace parameters indicators
         const loaderBubble = document.createElement("div");
         loaderBubble.className = "chat-bubble-row bubble-role-assistant chat-bubble-loader-state";
         loaderBubble.innerHTML = `
@@ -1151,8 +1009,8 @@ class ElectionApp {
         try {
             const requestPayload = {
                 message: query,
-                history: this.state.chatHistory.slice(-5), // Slice history boundaries to optimize network payloads
-                language: this.state.settings.language
+                history: this.state.chatHistory.slice(-5),
+                language: "en"
             };
 
             const response = await fetch(this.apiEndpoint, {
@@ -1190,7 +1048,6 @@ class ElectionApp {
 document.addEventListener("DOMContentLoaded", () => {
     window.ElectionEngineInstance = new ElectionApp();
     
-    // Smoothly strip out loader mask screens when engine instances initialize completely
     const appLoader = document.getElementById("global-loader");
     if (appLoader) {
         appLoader.classList.add("fade-out-animation");
