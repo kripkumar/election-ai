@@ -8,18 +8,18 @@
 </head>
 <body>
 
-    <!-- Global Screen Loader Overlay -->
+    <!-- Global App Loader -->
     <div id="global-loader" class="flex-center-alignment">
         <div class="spinner-ring"></div>
-        <p class="processing-pulse-vector" style="font-weight: 600; margin-top: 8px;">Loading Dashboard Engine...</p>
+        <p class="processing-pulse-vector" style="font-weight: 600; margin-top: 8px;">Loading Dashboard Panels...</p>
     </div>
 
-    <!-- Active Toast Alert Notification System -->
+    <!-- Live Toast Alert Anchor System -->
     <div id="toast-boundary-anchor"></div>
 
     <main class="app-mainframe-container slide-in-animation">
         
-        <!-- Header Brand Panel -->
+        <!-- Platform Header Hub -->
         <header class="platform-header-hub">
             <div class="brand-vector-group">
                 <h1><span>ElectionAI</span> Admin Dashboard</h1>
@@ -35,7 +35,7 @@
             </div>
         </header>
 
-        <!-- Dynamic Live Stats Row -->
+        <!-- Dynamic Live Stats Matrix Layout -->
         <div class="dashboard-analytics-matrix">
             <div class="metric-card-node">
                 <div class="metric-label">System Status</div>
@@ -55,13 +55,13 @@
             </div>
         </div>
 
-        <!-- Layout Split Main System -->
+        <!-- Split Column Layout Bifurcation Matrix -->
         <div class="layout-bifurcation-grid">
             
-            <!-- Left Panel Column: Setup Forms -->
+            <!-- Left Side Inputs and Directories -->
             <div class="layout-column">
                 
-                <!-- Box 1: General Election Setup -->
+                <!-- Setup Form Panel -->
                 <section class="glassmorphism-surface">
                     <div class="panel-section-header">1. General Election Setup</div>
                     <form id="form-election-setup" onsubmit="saveGeneralSettings(event)">
@@ -93,7 +93,7 @@
                     </form>
                 </section>
 
-                <!-- Box 2: Register Candidates -->
+                <!-- Candidate Enrollment Form Panel -->
                 <section class="glassmorphism-surface">
                     <div class="panel-section-header">2. Register Candidates</div>
                     <form id="form-candidate-registration" onsubmit="registerNewCandidate(event)">
@@ -121,7 +121,7 @@
                     </form>
                 </section>
 
-                <!-- Box 3: Live Candidate Directory Ledger -->
+                <!-- Candidate List and Live Ledger Display Panel -->
                 <section class="glassmorphism-surface">
                     <div class="panel-section-header">3. Candidate Directory & Live Counts</div>
                     <div class="table-scrolling-container">
@@ -146,19 +146,19 @@
                 </section>
             </div>
 
-            <!-- Right Panel Column: Live Charts & Master Controls -->
+            <!-- Right Side Visualizations and System Commands -->
             <div class="layout-column">
                 
-                <!-- Box 4: Live Results Graph Screen -->
+                <!-- Dynamic Pure CSS Bar Graph Interface Panel -->
                 <section class="glassmorphism-surface">
                     <div class="panel-section-header">Live Vote Share Visualizer</div>
-                    <div class="chart-rendering-canvas-boundary flex-center-alignment" id="chart-fallback-box" style="flex-direction: column; background: rgba(10,15,26,0.3); border-radius: 8px; border: 1px dashed var(--border-neon-grid);">
-                        <p class="ui-opacity-dim" id="chart-hint-text" style="font-size: 0.9rem; font-style: italic;">Add candidates and open polls to track real-time bars...</p>
+                    <div class="chart-rendering-canvas-boundary flex-center-alignment" id="chart-fallback-box" style="flex-direction: column; background: rgba(10,15,26,0.3); border-radius: 8px; border: 1px dashed var(--border-neon-grid); height: auto; min-height: 220px;">
+                        <p class="ui-opacity-dim" id="chart-hint-text" style="font-size: 0.9rem; font-style: italic; padding: 20px; text-align: center;">Add candidates and open polls to track real-time bars...</p>
                         <div id="dynamic-bar-chart-pool" style="width: 100%; padding: 16px; display: flex; flex-direction: column; gap: 12px;"></div>
                     </div>
                 </section>
 
-                <!-- Box 5: Emergency Action Center Controls -->
+                <!-- Master Operations Execution Node Panel -->
                 <section class="glassmorphism-surface">
                     <div class="panel-section-header">System Operations Node</div>
                     <div style="display: flex; flex-direction: column; gap: 12px;">
@@ -178,23 +178,24 @@
         </div>
     </main>
 
-    <!-- --- COMPLETE JAVASCRIPT ADMIN CONTROLLER ENGINE --- -->
+    <!-- --- JAVASCRIPT ADMIN DASHBOARD APPLICATION LOGIC MATRIX --- -->
     <script>
         const STORAGE_PREFIX = "electionai_";
 
-        // Global UI Hooks Cache
+        // DOM Elements Cache
         const domLoader = document.getElementById("global-loader");
         const tableBody = document.getElementById("admin-candidate-rows");
         const chartPool = document.getElementById("dynamic-bar-chart-pool");
         const chartHint = document.getElementById("chart-hint-text");
 
-        // Helper Methods for LocalStorage Matrix Access
+        // Storage Wrapper Functions
         function setLocal(key, value) { localStorage.setItem(STORAGE_PREFIX + key, value); }
         function getLocal(key, fallback = "") { return localStorage.getItem(STORAGE_PREFIX + key) || fallback; }
 
-        // Alert Alerts Engine 
+        // Native Notification Dispatch Engine
         function showToast(msg, type = "success") {
             const anchor = document.getElementById("toast-boundary-anchor");
+            if (!anchor) return;
             const node = document.createElement("div");
             node.className = `toast-node toast-type-${type} slide-in-animation`;
             node.innerText = msg;
@@ -205,7 +206,7 @@
             }, 4000);
         }
 
-        // Theme Toggle Sub-Module Routine
+        // Interlocking Theme Mode Matrix Functions
         window.toggleInterfaceTheme = function() {
             const current = getLocal("theme_mode", "dark");
             const target = current === "dark" ? "light" : "dark";
@@ -221,16 +222,15 @@
             }
         }
 
-        // Step 1: Save General Settings Handles
+        // Configuration Module: Save General Configuration Rules
         window.saveGeneralSettings = function(e) {
             e.preventDefault();
-            const name = document.getElementById("setup-election-name").value;
+            const name = document.getElementById("setup-election-name").value.trim();
             const dateStr = document.getElementById("setup-election-date").value;
             const openStr = document.getElementById("setup-start-time").value;
             const closeStr = document.getElementById("setup-end-time").value;
-            const desc = document.getElementById("setup-election-desc").value;
+            const desc = document.getElementById("setup-election-desc").value.trim();
 
-            // Compute exact millisecond anchors 
             const startTimestamp = new Date(`${dateStr}T${openStr}`).getTime();
             const endTimestamp = new Date(`${dateStr}T${closeStr}`).getTime();
 
@@ -249,7 +249,7 @@
             refreshDashboardViews();
         };
 
-        // Step 2: Register New Candidate Module
+        // Configuration Module: Register Candidate Profile Parameters
         window.registerNewCandidate = function(e) {
             e.preventDefault();
             const name = document.getElementById("cand-name").value.trim();
@@ -259,7 +259,6 @@
 
             let candidates = JSON.parse(getLocal("candidates", "[]"));
             
-            // Build simple unique ID sequence block
             const newCand = {
                 id: "id_" + Date.now(),
                 name: name,
@@ -277,40 +276,41 @@
             refreshDashboardViews();
         };
 
-        // Action Command: Delete Candidate Profile Node
+        // Configuration Module: Purge Specific Candidate Vector Profile
         window.removeCandidateProfile = function(id) {
             let candidates = JSON.parse(getLocal("candidates", "[]"));
             const targetIndex = candidates.findIndex(c => c.id === id);
+            
             if(targetIndex !== -1) {
                 const name = candidates[targetIndex].name;
-                // Subtract lost candidate votes from global counter tally metric cache pool
                 let globalVotes = parseInt(getLocal("total_votes", "0"), 10);
                 let lostVotes = parseInt(candidates[targetIndex].votes, 10) || 0;
+                
                 setLocal("total_votes", String(Math.max(0, globalVotes - lostVotes)));
-
                 candidates.splice(targetIndex, 1);
                 setLocal("candidates", JSON.stringify(candidates));
+                
                 showToast(`Removed candidate "${name}" from running profiles registry.`, "warning");
                 refreshDashboardViews();
             }
         };
 
-        // Action Command: Emergency Manual Phase Adjustments
+        // Operations Module: Emergency Shutdown Signal Action
         window.forceCloseVotingWindow = function() {
             setLocal("end_time", String(Date.now()));
             showToast("Polls have been closed early. Public terminals are now locked down.", "warning");
             refreshDashboardViews();
         };
 
+        // Operations Module: Master Structural Database Purge
         window.purgeEntireSystemDatabase = function() {
             if (confirm("Are you completely sure you want to wipe all configurations, candidates, and live vote data? This action cannot be undone.")) {
                 localStorage.clear();
                 showToast("System database completely wiped. Reverting state back to setup baseline.", "danger");
-                // Bootstrap default settings structures
+                
                 setLocal("total_votes", "0");
                 setLocal("candidates", "[]");
                 
-                // Form element clearing definitions mapping
                 document.getElementById("form-election-setup").reset();
                 document.getElementById("form-candidate-registration").reset();
                 
@@ -318,11 +318,11 @@
             }
         };
 
-        // Data Engine Processing Matrix Views Update Core
+        // Core Rendering & Aggregation Engine Loops
         function refreshDashboardViews() {
             syncInterfaceThemeState();
 
-            // 1. Calculate and update state phase window strings
+            // 1. Compute Active Window Status Operational Bounds
             const start = parseInt(getLocal("start_time", "0"), 10);
             const end = parseInt(getLocal("end_time", "0"), 10);
             const now = Date.now();
@@ -342,14 +342,14 @@
                 domStatus.className = "metric-value status-archived";
             }
 
-            // 2. Fetch data pools for rendering counters
+            // 2. Map Counters Metadata States
             const candidates = JSON.parse(getLocal("candidates", "[]"));
             const totalVotesCount = parseInt(getLocal("total_votes", "0"), 10);
 
             document.getElementById("stat-total-votes").innerText = totalVotesCount;
             document.getElementById("stat-total-candidates").innerText = candidates.length;
 
-            // 3. Render Table List View & compute leader properties tracking variables
+            // 3. Render Datagrid Interface & Core Leader Metrics Variables Tracking
             let leaderName = "N/A";
             let maxVotes = -1;
             let checkTie = false;
@@ -371,7 +371,6 @@
                 candidates.forEach(c => {
                     const votesInt = parseInt(c.votes, 10) || 0;
                     
-                    // Track leader algorithm logic updates
                     if (votesInt > maxVotes) {
                         maxVotes = votesInt;
                         leaderName = c.name;
@@ -380,7 +379,6 @@
                         checkTie = true;
                     }
 
-                    // Render list rows layout nodes
                     const tr = document.createElement("tr");
                     const pUrl = c.photo || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'><rect width='100%' height='100%' fill='%231f2937'/></svg>";
                     
@@ -399,7 +397,7 @@
                     `;
                     tableBody.appendChild(tr);
 
-                    // 4. Generate dynamic pure CSS bars without framework chart scripts
+                    // 4. Generate Hardware-Accelerated Dynamic CSS Live Bars
                     const pctShare = totalVotesCount > 0 ? Math.round((votesInt / totalVotesCount) * 100) : 0;
                     const chartRow = document.createElement("div");
                     chartRow.style.width = "100%";
@@ -418,7 +416,7 @@
 
             document.getElementById("stat-current-leader").innerText = (checkTie && maxVotes > 0) ? "Tie Race" : leaderName;
 
-            // Load values to text setup inputs if settings are preserved already
+            // Load values to text inputs if fields match structural persistence patterns cleanly
             if (getLocal("election_name") && document.activeElement.tagName !== "INPUT") {
                 document.getElementById("setup-election-name").value = getLocal("election_name");
                 document.getElementById("setup-election-date").value = getLocal("election_date");
@@ -428,7 +426,7 @@
             }
         }
 
-        // Generate and dispatch safe data spreadsheet blobs downloads
+        // Data Management Module: Generate and Compile Audit spreadsheet logs (CSV)
         window.downloadAuditReportCSV = function() {
             const candidates = JSON.parse(getLocal("candidates", "[]"));
             if(candidates.length === 0) {
@@ -451,15 +449,14 @@
             showToast("CSV data spreadsheet downloaded successfully.");
         };
 
-        // Cache text inputs strings configurations to preserve interface data states
+        // Cache simple input changes instantly to maintain field states across reloads cleanly
         document.getElementById("form-election-setup").addEventListener("input", function() {
             setLocal("start_time_str", document.getElementById("setup-start-time").value);
             setLocal("end_time_str", document.getElementById("setup-end-time").value);
         });
 
-        // Initialize App Main Engine Frame Runtime Loops
+        // App Bootstrap Hook Routine Implementation Entrypoint
         function bootstrapAdminMainframe() {
-            // Setup base counter configurations if missing
             if(!localStorage.getItem(STORAGE_PREFIX + "total_votes")) setLocal("total_votes", "0");
             if(!localStorage.getItem(STORAGE_PREFIX + "candidates")) setLocal("candidates", "[]");
 
@@ -470,14 +467,14 @@
                 setTimeout(() => domLoader.remove(), 400);
             }
 
-            // Monitor transactions processed inside the public voting terminal views instantly
+            // Sync with updates from public terminal interface interactions instantly
             window.addEventListener("storage", function(e) {
                 if(e.key && e.key.startsWith(STORAGE_PREFIX)) {
                     refreshDashboardViews();
                 }
             });
 
-            // Keep status phase values accurate every second
+            // Keep timeline logic states and calculations precise every second
             setInterval(refreshDashboardViews, 1000);
         }
 
