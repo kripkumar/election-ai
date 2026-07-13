@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - ElectionAI</title>
+    <title>Admin Hub - ElectionAI Vision</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- Global App Loader -->
+    <!-- Global App Loader / Access Gate -->
     <div id="global-loader" class="flex-center-alignment">
         <div class="spinner-ring"></div>
-        <p class="processing-pulse-vector" style="font-weight: 600; margin-top: 8px;">Loading Dashboard Panels...</p>
+        <p class="processing-pulse-vector" id="gate-status-text" style="font-weight: 600; margin-top: 8px;">Securing Node Architecture...</p>
     </div>
 
     <!-- Live Toast Alert Anchor System -->
@@ -22,15 +22,18 @@
         <!-- Platform Header Hub -->
         <header class="platform-header-hub">
             <div class="brand-vector-group">
-                <h1><span>ElectionAI</span> Admin Dashboard</h1>
-                <p>Manage election rules, add candidates, and track live results.</p>
+                <h1><span>ElectionAI</span> Core Matrix</h1>
+                <p>Advanced Computer Vision ballot routing and real-time leadership analytics dashboard.</p>
             </div>
             <div class="flex-align-center" style="gap: 12px;">
+                <button type="button" class="btn-action-control" onclick="fetchFromCloudflare()" style="background: #2563eb; width: auto; font-weight: 600;">
+                    🔄 Sync Cloudflare Data
+                </button>
                 <button type="button" class="btn-action-control" onclick="toggleInterfaceTheme()" style="background: var(--bg-card-substrate); border: 1px solid var(--border-neon-heavy); width: auto;">
                     🌓 Change Theme
                 </button>
                 <button type="button" class="btn-action-control" onclick="window.open('vote.html', '_blank')" style="background: var(--accent-primary-vector); width: auto; font-weight: 700;">
-                    🌐 Open Public Voting Page
+                    🌐 Open AI Vision Voting Terminal
                 </button>
             </div>
         </header>
@@ -38,20 +41,16 @@
         <!-- Dynamic Live Stats Matrix Layout -->
         <div class="dashboard-analytics-matrix">
             <div class="metric-card-node">
-                <div class="metric-label">System Status</div>
-                <div class="metric-value" id="stat-system-status" style="font-size: 1.3rem; color: var(--accent-warning-glow);">STANDBY</div>
-            </div>
-            <div class="metric-card-node">
-                <div class="metric-label">Total Votes Cast</div>
+                <div class="metric-label">Total Computer Vision Scans</div>
                 <div class="metric-value" id="stat-total-votes">0</div>
             </div>
             <div class="metric-card-node">
-                <div class="metric-label">Registered Candidates</div>
+                <div class="metric-label">Registered Ballots</div>
                 <div class="metric-value" id="stat-total-candidates">0</div>
             </div>
             <div class="metric-card-node">
                 <div class="metric-label">Current Leader</div>
-                <div class="metric-value" id="stat-current-leader" style="font-size: 1.4rem; color: var(--accent-success-glow);">N/A</div>
+                <div class="metric-value" id="stat-current-leader" style="font-size: 1.3rem; color: var(--accent-success-glow); font-weight: bold;">Processing...</div>
             </div>
         </div>
 
@@ -61,99 +60,85 @@
             <!-- Left Side Inputs and Directories -->
             <div class="layout-column">
                 
+                <!-- Computer Vision Processing Terminal Panel -->
+                <section class="glassmorphism-surface" style="border: 1px solid #10b981; background: rgba(16, 185, 129, 0.03);">
+                    <div class="panel-section-header" style="color: #34d399;">📷 Core Computer Vision Node</div>
+                    <div style="padding: 12px 0;">
+                        <p style="font-size: 0.85rem; margin-bottom: 12px; color: var(--text-muted-substrate);">
+                            This system processes voter submissions using edge-based optical character recognition (OCR). Voters show their physical paper ballot to the camera to register their choice.
+                        </p>
+                        <div style="background: #000; height: 180px; border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid var(--border-neon-grid); position: relative; overflow: hidden;">
+                            <div style="position: absolute; width: 80%; height: 60%; border: 2px dashed #34d399; opacity: 0.5; pointer-events: none;"></div>
+                            <span style="font-size: 2rem; margin-bottom: 4px;">👁️‍🗨️</span>
+                            <span style="font-size: 0.8rem; color: #34d399; letter-spacing: 1px; font-weight: bold;">VISION PIPELINE ACTIVE</span>
+                        </div>
+                    </div>
+                </section>
+
                 <!-- Setup Form Panel -->
                 <section class="glassmorphism-surface">
-                    <div class="panel-section-header">1. General Election Setup</div>
+                    <div class="panel-section-header">1. General System Setup</div>
                     <form id="form-election-setup" onsubmit="saveGeneralSettings(event)">
-                        <div class="form-structural-grid">
-                            <div class="input-group-element">
-                                <label>Election Name</label>
-                                <input type="text" id="setup-election-name" class="input-field-vector" placeholder="e.g., Student Council 2026" required>
-                            </div>
-                            <div class="input-group-element">
-                                <label>Election Date</label>
-                                <input type="date" id="setup-election-date" class="input-field-vector" required>
-                            </div>
-                        </div>
-                        <div class="form-structural-grid" style="margin-top: 12px;">
-                            <div class="input-group-element">
-                                <label>Polls Open Time</label>
-                                <input type="time" id="setup-start-time" class="input-field-vector" required>
-                            </div>
-                            <div class="input-group-element">
-                                <label>Polls Close Time</label>
-                                <input type="time" id="setup-end-time" class="input-field-vector" required>
-                            </div>
+                        <div class="input-group-element">
+                            <label>Election Name</label>
+                            <input type="text" id="setup-election-name" class="input-field-vector" placeholder="e.g., Global Ballot Matrix" required>
                         </div>
                         <div class="input-group-element" style="margin-top: 12px; margin-bottom: 20px;">
-                            <label>Election Description for Voters</label>
-                            <input type="text" id="setup-election-desc" class="input-field-vector" placeholder="Provide instructions or background info for voters...">
+                            <label>Description & Vision Prompt Constraints</label>
+                            <input type="text" id="setup-election-desc" class="input-field-vector" placeholder="Instructions for the optical sensor scanner...">
                         </div>
-                        <button type="submit" class="btn-action-control">Save Election Settings</button>
+                        <button type="submit" class="btn-action-control">Save System Settings</button>
                     </form>
                 </section>
 
                 <!-- Candidate Enrollment Form Panel -->
                 <section class="glassmorphism-surface">
-                    <div class="panel-section-header">2. Register Candidates</div>
+                    <div class="panel-section-header">2. Register Ballot Target Profile</div>
                     <form id="form-candidate-registration" onsubmit="registerNewCandidate(event)">
-                        <div class="form-structural-grid">
-                            <div class="input-group-element">
-                                <label>Candidate Full Name</label>
-                                <input type="text" id="cand-name" class="input-field-vector" placeholder="Jane Doe" required>
-                            </div>
-                            <div class="input-group-element">
-                                <label>Party or Affiliation</label>
-                                <input type="text" id="cand-party" class="input-field-vector" placeholder="Independent / Party Name" required>
-                            </div>
+                        <div class="input-group-element" style="margin-bottom: 20px;">
+                            <label>Target Text Identifier (Exact String to Match via Vision)</label>
+                            <input type="text" id="cand-name" class="input-field-vector" placeholder="e.g., Candidate Alpha" required>
                         </div>
-                        <div class="form-structural-grid" style="margin-top: 12px; margin-bottom: 20px;">
-                            <div class="input-group-element">
-                                <label>Candidate Photo Link (URL)</label>
-                                <input type="url" id="cand-photo" class="input-field-vector" placeholder="https://example.com/photo.jpg">
-                            </div>
-                            <div class="input-group-element">
-                                <label>Party Logo / Symbol Link (URL)</label>
-                                <input type="url" id="cand-symbol" class="input-field-vector" placeholder="https://example.com/logo.png">
-                            </div>
-                        </div>
-                        <button type="submit" class="btn-action-control action-success">Add Candidate to Ballot</button>
+                        <button type="submit" class="btn-action-control action-success">Add Target Profile</button>
                     </form>
-                </section>
-
-                <!-- Candidate List and Live Ledger Display Panel -->
-                <section class="glassmorphism-surface">
-                    <div class="panel-section-header">3. Candidate Directory & Live Counts</div>
-                    <div class="table-scrolling-container">
-                        <table class="ledger-data-matrix">
-                            <thead>
-                                <tr>
-                                    <th>Candidate Info</th>
-                                    <th>Party</th>
-                                    <th>Total Votes Received</th>
-                                    <th style="text-align: right;">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="admin-candidate-rows">
-                                <tr>
-                                    <td colspan="4" class="empty-state-vector-notice ui-text-center">
-                                        No registered candidates exist within this system. Use the form above to add profiles.
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
                 </section>
             </div>
 
             <!-- Right Side Visualizations and System Commands -->
             <div class="layout-column">
-                
-                <!-- Dynamic Pure CSS Bar Graph Interface Panel -->
+
+                <!-- Real-Time Leadership Analytics Panel -->
+                <section class="glassmorphism-surface" style="border: 1px solid #2563eb; background: rgba(37, 99, 235, 0.04);">
+                    <div class="panel-section-header" style="color: #60a5fa;">📊 Live Leadership Status Panel</div>
+                    <div id="ai-live-leader-box" style="padding: 14px; border-radius: 6px; font-size: 0.95rem; line-height: 1.5; color: var(--text-muted-substrate);">
+                        Awaiting camera tracking sensor inputs...
+                    </div>
+                </section>
+
+                <!-- Candidate List and Live Ledger Display Panel -->
                 <section class="glassmorphism-surface">
-                    <div class="panel-section-header">Live Vote Share Visualizer</div>
-                    <div class="chart-rendering-canvas-boundary flex-center-alignment" id="chart-fallback-box" style="flex-direction: column; background: rgba(10,15,26,0.3); border-radius: 8px; border: 1px dashed var(--border-neon-grid); height: auto; min-height: 220px;">
-                        <p class="ui-opacity-dim" id="chart-hint-text" style="font-size: 0.9rem; font-style: italic; padding: 20px; text-align: center;">Add candidates and open polls to track real-time bars...</p>
+                    <div class="panel-section-header">3. System Matrix Status & Live Visualizer</div>
+                    <div class="table-scrolling-container" style="margin-bottom: 16px;">
+                        <table class="ledger-data-matrix">
+                            <thead>
+                                <tr>
+                                    <th>Target Key</th>
+                                    <th>Detected Tally</th>
+                                    <th style="text-align: right;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-candidate-rows">
+                                <tr>
+                                    <td colspan="3" class="empty-state-vector-notice ui-text-center">
+                                        No registered database tags exist.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="chart-rendering-canvas-boundary flex-center-alignment" id="chart-fallback-box" style="flex-direction: column; background: rgba(10,15,26,0.3); border-radius: 8px; border: 1px dashed var(--border-neon-grid); min-height: 140px;">
+                        <p class="ui-opacity-dim" id="chart-hint-text" style="font-size: 0.9rem; font-style: italic; padding: 20px; text-align: center;">Awaiting optical tracking fields...</p>
                         <div id="dynamic-bar-chart-pool" style="width: 100%; padding: 16px; display: flex; flex-direction: column; gap: 12px;"></div>
                     </div>
                 </section>
@@ -162,9 +147,6 @@
                 <section class="glassmorphism-surface">
                     <div class="panel-section-header">System Operations Node</div>
                     <div style="display: flex; flex-direction: column; gap: 12px;">
-                        <button type="button" class="btn-action-control action-warning" onclick="forceCloseVotingWindow()">
-                            🔒 Force Close Polls Right Now
-                        </button>
                         <button type="button" class="btn-action-control" onclick="downloadAuditReportCSV()" style="background: #4b5563;">
                             📥 Download Results Spreadsheet (CSV)
                         </button>
@@ -181,12 +163,16 @@
     <!-- --- JAVASCRIPT ADMIN DASHBOARD APPLICATION LOGIC MATRIX --- -->
     <script>
         const STORAGE_PREFIX = "electionai_";
+        const CLOUDFLARE_WORKER_URL = "https://electionai.180011.workers.dev/";
+        const ADMIN_ACCESS_KEY = "hyderabad@143";
 
         // DOM Elements Cache
         const domLoader = document.getElementById("global-loader");
+        const gateStatusText = document.getElementById("gate-status-text");
         const tableBody = document.getElementById("admin-candidate-rows");
         const chartPool = document.getElementById("dynamic-bar-chart-pool");
         const chartHint = document.getElementById("chart-hint-text");
+        const aiLeaderBox = document.getElementById("ai-live-leader-box");
 
         // Storage Wrapper Functions
         function setLocal(key, value) { localStorage.setItem(STORAGE_PREFIX + key, value); }
@@ -204,6 +190,28 @@
                 node.classList.add("fade-out-animation");
                 setTimeout(() => node.remove(), 400);
             }, 4000);
+        }
+
+        // Fetch API Connection Handler for Cloudflare Worker
+        async function fetchFromCloudflare() {
+            try {
+                showToast("Fetching data from Cloudflare live matrix...", "warning");
+                const response = await fetch(CLOUDFLARE_WORKER_URL);
+                if (!response.ok) throw new Error("Worker endpoint returned bad response status.");
+                
+                const remoteData = await response.json();
+                
+                if (remoteData.candidates) setLocal("candidates", JSON.stringify(remoteData.candidates));
+                if (remoteData.total_votes !== undefined) setLocal("total_votes", String(remoteData.total_votes));
+                if (remoteData.election_name) setLocal("election_name", remoteData.election_name);
+                if (remoteData.election_description) setLocal("election_description", remoteData.election_description);
+
+                showToast("Cloudflare architecture sync execution complete.");
+                refreshDashboardViews();
+            } catch (err) {
+                console.error("Cloudflare Integration Error:", err);
+                showToast("Unable to reach Cloudflare Worker. Using cached offline data.", "danger");
+            }
         }
 
         // Interlocking Theme Mode Matrix Functions
@@ -226,45 +234,28 @@
         window.saveGeneralSettings = function(e) {
             e.preventDefault();
             const name = document.getElementById("setup-election-name").value.trim();
-            const dateStr = document.getElementById("setup-election-date").value;
-            const openStr = document.getElementById("setup-start-time").value;
-            const closeStr = document.getElementById("setup-end-time").value;
             const desc = document.getElementById("setup-election-desc").value.trim();
 
-            const startTimestamp = new Date(`${dateStr}T${openStr}`).getTime();
-            const endTimestamp = new Date(`${dateStr}T${closeStr}`).getTime();
-
-            if (endTimestamp <= startTimestamp) {
-                showToast("The Polls Close Time must be after the Polls Open Time.", "danger");
-                return;
-            }
-
             setLocal("election_name", name);
-            setLocal("election_date", dateStr);
-            setLocal("start_time", String(startTimestamp));
-            setLocal("end_time", String(endTimestamp));
             setLocal("election_description", desc);
 
             showToast("General Election settings saved and synced successfully.");
             refreshDashboardViews();
         };
 
-        // Configuration Module: Register Candidate Profile Parameters
+        // Configuration Module: Register Candidate Profile (NAME ONLY)
         window.registerNewCandidate = function(e) {
             e.preventDefault();
             const name = document.getElementById("cand-name").value.trim();
-            const party = document.getElementById("cand-party").value.trim();
-            const photo = document.getElementById("cand-photo").value.trim();
-            const symbol = document.getElementById("cand-symbol").value.trim();
 
             let candidates = JSON.parse(getLocal("candidates", "[]"));
             
             const newCand = {
                 id: "id_" + Date.now(),
                 name: name,
-                party: party,
-                photo: photo,
-                symbol: symbol,
+                party: "Target Track",
+                photo: "",
+                symbol: "",
                 votes: 0
             };
 
@@ -272,7 +263,7 @@
             setLocal("candidates", JSON.stringify(candidates));
             
             document.getElementById("form-candidate-registration").reset();
-            showToast(`Added ${name} directly to active ballot matrix registry!`);
+            showToast(`Added sensor recognition keyword: "${name}"`);
             refreshDashboardViews();
         };
 
@@ -290,16 +281,9 @@
                 candidates.splice(targetIndex, 1);
                 setLocal("candidates", JSON.stringify(candidates));
                 
-                showToast(`Removed candidate "${name}" from running profiles registry.`, "warning");
+                showToast(`Removed tracking key "${name}" from vision registry.`, "warning");
                 refreshDashboardViews();
             }
-        };
-
-        // Operations Module: Emergency Shutdown Signal Action
-        window.forceCloseVotingWindow = function() {
-            setLocal("end_time", String(Date.now()));
-            showToast("Polls have been closed early. Public terminals are now locked down.", "warning");
-            refreshDashboardViews();
         };
 
         // Operations Module: Master Structural Database Purge
@@ -318,47 +302,59 @@
             }
         };
 
+        // 📊 LIVE DIRECT LEADERSHIP LOGIC LOOP
+        function calculateActiveLeader(candidates, totalVotes) {
+            if (!candidates || candidates.length === 0) {
+                aiLeaderBox.innerHTML = "💡 <em>Awaiting tracking targets to establish leadership monitoring.</em>";
+                document.getElementById("stat-current-leader").innerText = "N/A";
+                return;
+            }
+            if (totalVotes === 0) {
+                aiLeaderBox.innerHTML = "📡 <strong>Status:</strong> Tracking pipeline listening. Detections currently sit at absolute zero.";
+                document.getElementById("stat-current-leader").innerText = "No Scans Yet";
+                return;
+            }
+
+            // Direct descending value matrix extraction
+            const sorted = [...candidates].sort((a, b) => (b.votes || 0) - (a.votes || 0));
+            const leader = sorted[0];
+            const leaderVotes = leader.votes || 0;
+            const tieMatches = sorted.filter(c => (c.votes || 0) === leaderVotes);
+
+            if (tieMatches.length > 1) {
+                const tieNames = tieMatches.map(c => c.name).join(" & ");
+                aiLeaderBox.innerHTML = `⚖️ <strong>Current Standing:</strong> Active Tie deadlock between <strong>${tieNames}</strong> (${leaderVotes} detections each).`;
+                document.getElementById("stat-current-leader").innerText = "Tie Race";
+                return;
+            }
+
+            const runnerUp = sorted[1];
+            const margin = leaderVotes - (runnerUp ? runnerUp.votes : 0);
+            const percentage = Math.round((leaderVotes / totalVotes) * 100);
+
+            aiLeaderBox.innerHTML = `🏆 <strong>Current Leader:</strong> <strong>${leader.name}</strong> holds the high-ground position. <br><br>🏁 <strong>Live Margin Split:</strong> Lead gap of <strong>+${margin} votes</strong> over the nearest contender, commanding <strong>${percentage}%</strong> of processed scanning volume.`;
+            document.getElementById("stat-current-leader").innerText = leader.name;
+        }
+
         // Core Rendering & Aggregation Engine Loops
         function refreshDashboardViews() {
             syncInterfaceThemeState();
 
-            // 1. Compute Active Window Status Operational Bounds
-            const start = parseInt(getLocal("start_time", "0"), 10);
-            const end = parseInt(getLocal("end_time", "0"), 10);
-            const now = Date.now();
-            const domStatus = document.getElementById("stat-system-status");
-
-            if(!start || !end) {
-                domStatus.innerText = "STANDBY";
-                domStatus.className = "metric-value status-standby";
-            } else if (now < start) {
-                domStatus.innerText = "UPCOMING";
-                domStatus.className = "metric-value status-standby";
-            } else if (now >= start && now <= end) {
-                domStatus.innerText = "LIVE OPEN";
-                domStatus.className = "metric-value status-live-active";
-            } else {
-                domStatus.innerText = "ENDED";
-                domStatus.className = "metric-value status-archived";
-            }
-
-            // 2. Map Counters Metadata States
+            // Fetch data pools for rendering counters
             const candidates = JSON.parse(getLocal("candidates", "[]"));
             const totalVotesCount = parseInt(getLocal("total_votes", "0"), 10);
 
             document.getElementById("stat-total-votes").innerText = totalVotesCount;
             document.getElementById("stat-total-candidates").innerText = candidates.length;
 
-            // 3. Render Datagrid Interface & Core Leader Metrics Variables Tracking
-            let leaderName = "N/A";
-            let maxVotes = -1;
-            let checkTie = false;
+            // Direct calculation output
+            calculateActiveLeader(candidates, totalVotesCount);
 
             if (candidates.length === 0) {
                 tableBody.innerHTML = `
                     <tr>
-                        <td colspan="4" class="empty-state-vector-notice ui-text-center">
-                            No registered candidates exist within this system. Use the form above to add profiles.
+                        <td colspan="3" class="empty-state-vector-notice ui-text-center">
+                            No registered recognition profiles exist. Add keys to begin.
                         </td>
                     </tr>`;
                 chartPool.innerHTML = "";
@@ -370,25 +366,13 @@
 
                 candidates.forEach(c => {
                     const votesInt = parseInt(c.votes, 10) || 0;
-                    
-                    if (votesInt > maxVotes) {
-                        maxVotes = votesInt;
-                        leaderName = c.name;
-                        checkTie = false;
-                    } else if (votesInt === maxVotes && maxVotes > 0) {
-                        checkTie = true;
-                    }
-
                     const tr = document.createElement("tr");
-                    const pUrl = c.photo || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'><rect width='100%' height='100%' fill='%231f2937'/></svg>";
                     
                     tr.innerHTML = `
-                        <td class="flex-align-center">
-                            <img src="${pUrl}" class="ledger-thumb-pic" alt="">
-                            <span style="font-weight: 600;">${c.name}</span>
+                        <td>
+                            <span style="font-weight: 600; padding-left: 8px;">${c.name}</span>
                         </td>
-                        <td><span class="ui-opacity-dim">${c.party}</span></td>
-                        <td><span class="badge-count-vector">${votesInt} votes</span></td>
+                        <td><span class="badge-count-vector">${votesInt} detections</span></td>
                         <td style="text-align: right;">
                             <button type="button" class="btn-action-control action-purge" onclick="removeCandidateProfile('${c.id}')" style="width:auto; padding:4px 10px; font-size:0.8rem;">
                                 Delete
@@ -397,13 +381,13 @@
                     `;
                     tableBody.appendChild(tr);
 
-                    // 4. Generate Hardware-Accelerated Dynamic CSS Live Bars
+                    // Generate Hardware-Accelerated Dynamic CSS Live Bars
                     const pctShare = totalVotesCount > 0 ? Math.round((votesInt / totalVotesCount) * 100) : 0;
                     const chartRow = document.createElement("div");
                     chartRow.style.width = "100%";
                     chartRow.innerHTML = `
                         <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:4px;">
-                            <span>${c.name} (${c.party})</span>
+                            <span>${c.name}</span>
                             <strong>${pctShare}% (${votesInt})</strong>
                         </div>
                         <div style="background:rgba(255,255,255,0.05); height:8px; border-radius:4px; overflow:hidden; border:1px solid var(--border-neon-grid);">
@@ -414,14 +398,9 @@
                 });
             }
 
-            document.getElementById("stat-current-leader").innerText = (checkTie && maxVotes > 0) ? "Tie Race" : leaderName;
-
             // Load values to text inputs if fields match structural persistence patterns cleanly
             if (getLocal("election_name") && document.activeElement.tagName !== "INPUT") {
                 document.getElementById("setup-election-name").value = getLocal("election_name");
-                document.getElementById("setup-election-date").value = getLocal("election_date");
-                document.getElementById("setup-start-time").value = getLocal("start_time_str") || "";
-                document.getElementById("setup-end-time").value = getLocal("end_time_str") || "";
                 document.getElementById("setup-election-desc").value = getLocal("election_description");
             }
         }
@@ -430,37 +409,45 @@
         window.downloadAuditReportCSV = function() {
             const candidates = JSON.parse(getLocal("candidates", "[]"));
             if(candidates.length === 0) {
-                showToast("There are no candidate data records available to compile into a CSV document.", "warning");
+                showToast("There are no database metrics records available to compile into a CSV document.", "warning");
                 return;
             }
 
-            let csvContent = "data:text/csv;charset=utf-8,Candidate Name,Party Affiliation,Votes Logged Tally\n";
+            let csvContent = "data:text/csv;charset=utf-8,Target Identification Key,Detection Counter Tally\n";
             candidates.forEach(c => {
-                csvContent += `"${c.name}","${c.party}",${c.votes}\n`;
+                csvContent += `"${c.name}",${c.votes}\n`;
             });
 
             const encodedUri = encodeURI(csvContent);
             const hiddenDownloadAnchor = document.createElement("a");
             hiddenDownloadAnchor.setAttribute("href", encodedUri);
-            hiddenDownloadAnchor.setAttribute("download", `ElectionAI_Results_${Date.now()}.csv`);
+            hiddenDownloadAnchor.setAttribute("download", `VisionAI_DetectionReport_${Date.now()}.csv`);
             document.body.appendChild(hiddenDownloadAnchor);
             hiddenDownloadAnchor.click();
             document.body.removeChild(hiddenDownloadAnchor);
-            showToast("CSV data spreadsheet downloaded successfully.");
+            showToast("CSV tracking matrix spreadsheet downloaded.");
         };
-
-        // Cache simple input changes instantly to maintain field states across reloads cleanly
-        document.getElementById("form-election-setup").addEventListener("input", function() {
-            setLocal("start_time_str", document.getElementById("setup-start-time").value);
-            setLocal("end_time_str", document.getElementById("setup-end-time").value);
-        });
 
         // App Bootstrap Hook Routine Implementation Entrypoint
         function bootstrapAdminMainframe() {
+            // 🔒 SECURITY CHECK SYSTEM TRIGGER
+            const inputKey = prompt("🔑 Security Vault Verification:\nPlease enter the access password to mount dashboard controls:");
+            
+            if (inputKey !== ADMIN_ACCESS_KEY) {
+                if (gateStatusText) {
+                    gateStatusText.innerText = "❌ ACCESS DENIED: Invalid Matrix Authorization Token.";
+                    gateStatusText.style.color = "#ef4444";
+                }
+                alert("Incorrect password. Matrix session terminated.");
+                return; // Cease execution immediately
+            }
+
+            // Unlocked Initialization
             if(!localStorage.getItem(STORAGE_PREFIX + "total_votes")) setLocal("total_votes", "0");
             if(!localStorage.getItem(STORAGE_PREFIX + "candidates")) setLocal("candidates", "[]");
 
-            refreshDashboardViews();
+            // Perform automatic remote data fetch immediately upon bootup
+            fetchFromCloudflare();
 
             if (domLoader) {
                 domLoader.classList.add("fade-out-animation");
@@ -474,7 +461,7 @@
                 }
             });
 
-            // Keep timeline logic states and calculations precise every second
+            // Refresh interface logic regularly
             setInterval(refreshDashboardViews, 1000);
         }
 
