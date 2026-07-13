@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en" class="dark-mode-substrate" data-ui-scale="medium">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElectionAI - Electronic Consensus Simulation Platform</title>
+    
+    <!-- ChartJS Engine for Advanced Data Visualization Metrics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    
+    <style>
+        /* --- 1. CORE ARCHITECTURE SPECIFICATIONS --- */
+        :root {
+            /* Structural Color Spectrum Mapping (Dark Substrate Engine Default) */
+            --bg-deep-space: #0b0f19;
+            --bg-glass-layer: rgba(17, 24, 39, 0.7);
+            --bg-card-substrate: rgba(31, 41, 55, 0.45);
+            --border-neon-grid: rgba(59, 130, 246, 0.15);
+            --border-neon-heavy: rgba(59, 130, 246, 0.3);
+            
+            --text-pure-white: #f3f4f6;
+            --text-neon-glow: #60a5fa;
+            --text-dim-slate: #9ca3af;
+            
+            /* Custom Injectable Accent Color Variables Managed via JS Matrix */
+            --accent-primary-vector: #3b82f6;
+            --accent-success-glow: #10b981;
+            --accent-danger-glow: #ef4444;
+            --accent-warning-glow: #f59e0b;
+            
+            /* UI System Metrics Scale Layouts */
+            --font-size-base: 1rem;
+            --border-radius-standard: 12px;
+            --glass-blur-blur: 16px;
+        }
+
+        /* Runtime Multi-Theme Interlocking Substrates */
+        .light-mode-substrate {
+            --bg-deep-space: #f9fafb;
+            --bg-glass-layer: rgba(255, 255, 255, 0.75);
+            --bg-card-substrate: rgba(243, 244, 246, 0.85);
+            --border-neon-grid: rgba(59, 130, 246, 0.1);
+            --border-neon-heavy: rgba(59, 130, 246, 0.25);
+            --text-pure-white: #111827;
+            --text-neon-glow: #2563eb;
+            --text-dim-slate: #4b5563;
+        }
+
+        /* Dynamic Scale Sizing Subsystem Controls */
+        html[data-ui-scale="small"] { --font-size-base: 0.875rem; }
+        html[data-ui-scale="medium"] { --font-size-base: 1rem; }
+        html[data-ui-scale="large"] { --font-size-base: 1.125rem; }
+
+        /* General Document Structural Rules */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        body {
+            background-color: var(--bg-deep-space);
+            color: var(--text-pure-white);
+            font-size: var(--font-size-base);
+            overflow-x: hidden;
+            padding-bottom: 60px;
+        }
+
+        /* Global Structural Utilities */
+        .ui-display-none-force { display: none !important; }
+        .ui-text-center { text-align: center; }
+        .ui-opacity-dim { opacity: 0.6; }
+        .flex-align-center { display: flex; align-items: center; }
+        .flex-center-alignment { display: flex; align-items: center; justify-content: center; }
+
+        /* --- 2. LAYOUT ENGINE PANELS --- */
+        .app-mainframe-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        /* Global Header Brand Control Hub */
+        .platform-header-hub {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-radius: var(--border-radius-standard);
+            background: var(--bg-glass-layer);
+            backdrop-filter: blur(var(--glass-blur-blur));
+            border: 1px solid var(--border-neon-grid);
+            margin-bottom: 24px;
+        }
+
+        .brand-vector-group h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text-pure-white);
+            letter-spacing: -0.025em;
+        }
+
+        .brand-vector-group h1 span {
+            color: var(--accent-primary-vector);
+        }
+
+        .brand-vector-group p {
+            font-size: 0.85rem;
+            color: var(--text-dim-slate);
+            margin-top: 2px;
+        }
+
+        /* Multi-Column High-Performance Analytical Dashboard Grid */
+        .dashboard-analytics-matrix {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .metric-card-node {
+            background: var(--bg-glass-layer);
+            border: 1px solid var(--border-neon-grid);
+            padding: 20px;
+            border-radius: var(--border-radius-standard);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card-node .metric-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-dim-slate);
+            letter-spacing: 0.05em;
+        }
+
+        .metric-card-node .metric-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-top: 8px;
+            color: var(--text-pure-white);
+            font-family: monospace;
+        }
+
+        /* Functional Split Interface Grid System */
+        .layout-bifurcation-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 1024px) {
+            .layout-bifurcation-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Glassmorphism Generic Structural Interface Card */
+        .glassmorphism-surface {
+            background: var(--bg-glass-layer);
+            backdrop-filter: blur(var(--glass-blur-blur));
+            border: 1px solid var(--border-neon-grid);
+            border-radius: var(--border-radius-standard);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .panel-section-header {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent-primary-vector);
+            padding-left: 12px;
+            color: var(--text-pure-white);
+        }
+
+        /* --- 3. VOTING TERMINAL ELEMENTS --- */
+        .voting-cards-matrix {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .ballot-card-component {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .ballot-avatar-frame {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin-bottom: 16px;
+        }
+
+        .ballot-profile-graphic {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--border-neon-heavy);
+        }
+
+        .ballot-symbol-overlay {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid var(--border-neon-heavy);
+            object-fit: contain;
+        }
+
+        .ballot-candidate-name-header {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-pure-white);
+        }
+
+        .ballot-candidate-party-subtext {
+            font-size: 0.85rem;
+            color: var(--text-dim-slate);
+            margin-top: 4px;
+            margin-bottom: 20px;
+        }
+
+        .ballot-action-wrapper {
+            width: 100%;
+            margin-top: auto;
+        }
+
+        /* --- 4. FORM AND BUTTON INPUT ARRAYS --- */
+        .form-structural-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .input-group-element {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .input-group-element label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-dim-slate);
+        }
+
+        .input-field-vector, .select-dropdown-vector {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-neon-grid);
+            color: var(--text-pure-white);
+            padding: 10px 14px;
+            border-radius: 8px;
+            outline: none;
+            font-size: 0.9rem;
+        }
+
+        .input-field-vector:focus, .select-dropdown-vector:focus {
+            border-color: var(--accent-primary-vector);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+
+        .btn-action-control, .btn-ballot-vector {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            width: 100%;
+            color: #fff;
+            background: var(--accent-primary-vector);
+            gap: 8px;
+        }
+
+        .btn-action-control:hover, .btn-ballot-vector:hover {
+            filter: brightness(1.15);
+        }
+
+        /* Custom Action Colors */
+        .action-success { background: var(--accent-success-glow); }
+        .action-danger { background: var(--accent-danger-glow); }
+        .action-warning { background: var(--accent-warning-glow); }
+        .action-purge { background: rgba(239, 68, 68, 0.15); color: var(--accent-danger-glow); border: 1px solid rgba(239, 68, 68, 0.3); }
+        .action-purge:hover { background: var(--accent-danger-glow); color: #fff; }
+
+        /* Lock States */
+        .disabled-state-lock { background: #4b5563 !important; color: #9ca3af !important; cursor: not-allowed !important; filter: none !important; }
+        .duplicate-state-lock { background: rgba(245, 158, 11, 0.15) !important; color: var(--accent-warning-glow) !important; border: 1px solid rgba(245, 158, 11, 0.3); cursor: not-allowed !important; }
+
+        /* --- 5. DATA LEDGER MANAGEMENT MATRIX --- */
+        .table-scrolling-container {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 16px;
+        }
+
+        .ledger-data-matrix {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        .ledger-data-matrix th {
+            padding: 12px 16px;
+            border-bottom: 2px solid var(--border-neon-grid);
+            color: var(--text-dim-slate);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        .ledger-data-matrix td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-neon-grid);
+            color: var(--text-pure-white);
+            vertical-align: middle;
+        }
+
+        .ledger-thumb-pic {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 12px;
+            border: 1px solid var(--border-neon-heavy);
+        }
+
+        .badge-count-vector {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--text-neon-glow);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+        }
+
+        /* --- 6. AI CONVERSATIONAL ASSISTANT SYSTEM --- */
+        .ai-assistant-frame {
+            display: flex;
+            flex-direction: column;
+            height: 480px;
+            background: var(--bg-glass-layer);
+            border: 1px solid var(--border-neon-grid);
+            border-radius: var(--border-radius-standard);
+            overflow: hidden;
+        }
+
+        .chat-logs-viewport {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: rgba(10, 15, 26, 0.4);
+        }
+
+        .chat-bubble-row {
+            display: flex;
+            gap: 12px;
+            max-width: 85%;
+        }
+
+        .bubble-role-user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .bubble-role-assistant {
+            align-self: flex-start;
+        }
+
+        .chat-bubble-avatar-identifier {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            background: var(--border-neon-heavy);
+            color: var(--text-neon-glow);
+            flex-shrink: 0;
+        }
+
+        .bubble-role-user .chat-bubble-avatar-identifier {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent-success-glow);
+        }
+
+        .chat-bubble-text-payload {
+            background: var(--bg-card-substrate);
+            padding: 12px 16px;
+            border-radius: var(--border-radius-standard);
+            font-size: 0.875rem;
+            line-height: 1.4;
+            color: var(--text-pure-white);
+            border: 1px solid var(--border-neon-grid);
+        }
+
+        .bubble-role-user .chat-bubble-text-payload {
+            background: var(--accent-primary-vector);
+            color: #ffffff;
+            border: none;
+        }
+
+        .chat-input-dock-panel {
+            display: flex;
+            padding: 12px;
+            background: var(--bg-glass-layer);
+            border-top: 1px solid var(--border-neon-grid);
+            gap: 8px;
+        }
+
+        /* --- 7. HARDWARE ACCELERATED ANIMATION TRANSLATIONS --- */
+        .rise-hover-interaction {
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s;
+        }
+        .rise-hover-interaction:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -10px rgba(59, 130, 246, 0.3);
+        }
+
+        .slide-in-animation {
+            animation: slideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .scale-up-animation {
+            animation: scaleUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        @keyframes scaleUp {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .fade-out-animation {
+            animation: fadeOut 0.4s ease forwards !important;
+        }
+        @keyframes fadeOut {
+            to { opacity: 0; transform: translateY(-10px); }
+        }
+
+        .processing-pulse-vector {
+            animation: processingPulse 1.5s infinite ease-in-out;
+        }
+        @keyframes processingPulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; color: var(--text-neon-glow); }
+        }
+
+        .disable-motion-vectors * {
+            animation: none !important;
+            transition: none !important;
+        }
+
+        /* --- 8. FLOATING GRAPHICAL OVERLAYS --- */
+        #global-loader {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: var(--bg-deep-space);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .spinner-ring {
+            width: 50px; height: 50px;
+            border: 3px solid var(--border-neon-grid);
+            border-top-color: var(--accent-primary-vector);
+            border-radius: 50%;
+            animation: loopSpin 0.8s linear infinite;
+        }
+        @keyframes loopSpin { to { transform: rotate(360deg); } }
+
+        #toast-boundary-anchor {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 380px;
+        }
+
+        .toast-node {
+            background: #1f2937;
+            border-left: 4px solid var(--accent-primary-vector);
+            color: #fff;
+            padding: 14px 20px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.4);
+        }
+        .toast-type-success { border-left-color: var(--accent-success-glow); }
+        .toast-type-danger { border-left-color: var(--accent-danger-glow); }
+        .toast-type-warning { border-left-color: var(--accent-warning-glow); }
+
+        /* Full Screen Winner Frame Overlay */
+        .winner-announcement-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(7, 10, 19, 0.95);
+            z-index: 900;
+            backdrop-filter: blur(8px);
+        }
+
+        #confetti-canvas-plane {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 901;
+        }
+
+        .winner-display-card {
+            background: linear-gradient(135deg, rgba(17,24,39,0.9), rgba(31,41,55,0.8));
+            border: 2px solid var(--accent-warning-glow);
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 480px;
+            width: 90%;
+            position: relative;
+            z-index: 902;
+            box-shadow: 0 0 40px rgba(245, 158, 11, 0.2);
+        }
+
+        .winner-avatar-large {
+            width: 140px; height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--accent-warning-glow);
+            margin: 0 auto 20px;
+            display: block;
+        }
+
+        /* Visualization Chart Frame Bounds */
+        .chart-rendering-canvas-boundary {
+            position: relative;
+            height: 220px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body id="electionai-app">
+
+    <!-- Global Application Synchronous Hydration Loader Overlay -->
+    <div id="global-loader" class="flex-center-alignment">
+        <div class="spinner-ring"></div>
+        <p style="font-weight: 600; font-size: 0.9rem; color: var(--text-dim-slate);">Securing consensus systems...</p>
+    </div>
+
+    <!-- Main Application Scaffolding Core -->
+    <div class="app-mainframe-container">
+        
+        <!-- Platform Header Hub -->
+        <header class="platform-header-hub">
+            <div class="brand-vector-group">
+                <h1>Election<span>AI</span> Core</h1>
+                <p>Advanced Electronic Decentralized Consensus Simulation Engine</p>
+            </div>
+            <!-- Standard Control Vectors -->
+            <div class="flex-align-center" style="gap: 12px;">
+                <span id="countdown-timer-vector" class="badge-count-vector" style="font-size: 0.9rem; padding: 6px 12px; background: rgba(239, 68, 68, 0.1); color: var(--accent-danger-glow);">00:00:00</span>
+            </div>
+        </header>
+
+        <!-- Live Metrics Indicators -->
+        <section class="dashboard-analytics-matrix">
+            <div class="metric-card-node">
+                <div class="metric-label">System Status</div>
+                <div id="dash-stat-status" class="metric-value" style="font-size: 1.15rem; margin-top: 14px; font-family: inherit;">STANDBY</div>
+            </div>
+            <div class="metric-card-node">
+                <div class="metric-label">Ballot Transactions</div>
+                <div id="dash-stat-votes" class="metric-value">0</div>
+            </div>
+            <div class="metric-card-node">
+                <div class="metric-label">Enrolled Candidates</div>
+                <div id="dash-stat-candidates" class="metric-value">0</div>
+            </div>
+            <div class="metric-card-node">
+                <div class="metric-label">Consensus Leader</div>
+                <div id="dash-stat-leader" class="metric-value" style="font-size: 1.3rem; margin-top: 12px; font-family: inherit; color: var(--text-neon-glow); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">N/A</div>
+            </div>
+            <div class="metric-card-node" style="display: none;">
+                <div id="dash-stat-voters">0</div>
+                <div id="dash-stat-timer">00:00:00</div>
+            </div>
+        </section>
+
+        <!-- Split Structural Interface Architecture -->
+        <main class="layout-bifurcation-grid">
+            
+            <!-- Left Primary Layout: Polling Interface and Analytical Frameworks -->
+            <div class="primary-column-vector">
+                
+                <!-- Interactive Voter Polling Terminal Area -->
+                <section class="glassmorphism-surface slide-in-animation">
+                    <h2 class="panel-section-header">Electronic Ballot Matrix</h2>
+                    <div id="voting-cards-matrix" class="voting-cards-matrix">
+                        <!-- Instantiated Dynamically via JavaScript Lifecycle -->
+                    </div>
+                </section>
+
+                <!-- Data Analysis and Visual Metrics Panels -->
+                <section class="glassmorphism-surface">
+                    <h2 class="panel-section-header">Live Audit Visualizations</h2>
+                    <div class="form-structural-grid" style="grid-template-columns: 1fr 1fr; gap: 24px;">
+                        <div class="input-group-element">
+                            <label class="ui-text-center" style="margin-bottom: 10px;">Consensus Distribution Tally</label>
+                            <div class="chart-rendering-canvas-boundary">
+                                <canvas id="analytics-pie-canvas"></canvas>
+                            </div>
+                        </div>
+                        <div class="input-group-element">
+                            <label class="ui-text-center" style="margin-bottom: 10px;">Relative Scale Margins</label>
+                            <div class="chart-rendering-canvas-boundary">
+                                <canvas id="analytics-bar-canvas"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Secure Administrative Dashboard Panel Structure -->
+                <section class="glassmorphism-surface">
+                    <h2 class="panel-section-header">Administrative Command Node</h2>
+                    
+                    <!-- Admin Login Access Portal -->
+                    <div id="admin-auth-card" class="ui-text-center" style="padding: 20px 0;">
+                        <p class="ui-opacity-dim" style="margin-bottom: 16px; font-size: 0.9rem;">Elevated clearance required to mutate system configurations or candidate records.</p>
+                        <div class="form-structural-grid" style="max-width: 500px; margin: 0 auto 16px;">
+                            <input type="text" id="admin-user" class="input-field-vector" placeholder="Security Username" value="admin" />
+                            <input type="password" id="admin-pass" class="input-field-vector" placeholder="Security Password" value="admin123" />
+                        </div>
+                        <button id="admin-login-submit" class="btn-action-control" style="max-width: 200px;">Unlock Controller</button>
+                    </div>
+
+                    <!-- Secured Admin Function Panel Grid (Hidden Behind State Assertions) -->
+                    <div id="admin-secured-panel" class="ui-display-none-force slide-in-animation">
+                        
+                        <!-- System Global Rules Modification Forms -->
+                        <div class="form-structural-grid">
+                            <div class="input-group-element">
+                                <label>Election Designation</label>
+                                <input type="text" id="cfg-election-name" class="input-field-vector" />
+                            </div>
+                            <div class="input-group-element">
+                                <label>Platform Framework Description</label>
+                                <input type="text" id="cfg-election-desc" class="input-field-vector" />
+                            </div>
+                        </div>
+
+                        <div class="form-structural-grid">
+                            <div class="input-group-element">
+                                <label>Calendar Window Date</label>
+                                <input type="date" id="cfg-election-date" class="input-field-vector" />
+                            </div>
+                            <div class="input-group-element">
+                                <label>Consensus Trigger Start Time</label>
+                                <input type="time" id="cfg-election-start" class="input-field-vector" />
+                            </div>
+                            <div class="input-group-element">
+                                <label>Automated Closing Threshold Time</label>
+                                <input type="time" id="cfg-election-end" class="input-field-vector" />
+                            </div>
+                        </div>
+
+                        <div class="form-structural-grid" style="margin-bottom: 24px;">
+                            <button id="btn-save-config" class="btn-action-control action-success">Commit System Configuration</button>
+                        </div>
+
+                        <hr style="border: none; border-top: 1px solid var(--border-neon-grid); margin-bottom: 24px;" />
+
+                        <!-- Candidate Mutation Engine Forms -->
+                        <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 14px; color: var(--text-neon-glow);">Enroll Ballot Profile Record</h3>
+                        <div class="form-structural-grid">
+                            <div class="input-group-element">
+                                <label>Candidate Moniker Name</label>
+                                <input type="text" id="cand-name" class="input-field-vector" placeholder="e.g. Satoshi Nakamoto" />
+                            </div>
+                            <div class="input-group-element">
+                                <label>Coalition / Party Affiliation</label>
+                                <input type="text" id="cand-party" class="input-field-vector" placeholder="e.g. Decentralized Guild" />
+                            </div>
+                            <div class="input-group-element">
+                                <label>Biometric Portrait Photo</label>
+                                <input type="file" id="cand-photo-upload" class="input-field-vector" accept="image/*" />
+                            </div>
+                            <div class="input-group-element">
+                                <label>Faction / Party Symbol Graphic</label>
+                                <input type="file" id="cand-symbol-upload" class="input-field-vector" accept="image/*" />
+                            </div>
+                        </div>
+
+                        <div class="form-structural-grid" style="margin-bottom: 24px;">
+                            <button id="btn-add-candidate" class="btn-action-control">Register Candidate Profile</button>
+                        </div>
+
+                        <!-- Current Enrolled Candidates Matrix Ledger -->
+                        <div class="table-scrolling-container">
+                            <table class="ledger-data-matrix">
+                                <thead>
+                                    <tr>
+                                        <th>Candidate Profile</th>
+                                        <th>Party / Coalition</th>
+                                        <th>Cryptographic Key Index</th>
+                                        <th>Tally Total</th>
+                                        <th>Management Rules</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="candidates-table-ledger">
+                                    <!-- Populated Dynamically via JS Runtime Engines -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <hr style="border: none; border-top: 1px solid var(--border-neon-grid); margin: 24px 0;" />
+
+                        <!-- System Execution Control Array Hub -->
+                        <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 14px; color: var(--accent-danger-glow);">System Operational Overrides</h3>
+                        <div class="form-structural-grid">
+                            <button id="btn-sys-start" class="btn-action-control action-success">Open Global Terminals</button>
+                            <button id="btn-sys-end" class="btn-action-control action-warning">Close Consensus Window</button>
+                            <button id="btn-sys-export" class="btn-action-control">Compile Audit Spreadsheet (CSV)</button>
+                            <button id="btn-sys-reset" class="btn-action-control action-danger">Purge Core Matrix</button>
+                        </div>
+
+                        <div class="ui-text-center" style="margin-top: 20px;">
+                            <button id="admin-logout-trigger" class="btn-action-control action-purge" style="max-width: 180px; padding: 6px 12px; font-size: 0.8rem;">Lock Terminal Context</button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Secondary Column Panel: AI Assistant Frameworks & Environment Customizers -->
+            <div class="secondary-column-vector">
+                
+                <!-- AI Cryptographic Consensus Guide Framework Interface -->
+                <section class="glassmorphism-surface" style="padding: 0; overflow: hidden; border-color: var(--border-neon-heavy);">
+                    <div style="padding: 16px; border-bottom: 1px solid var(--border-neon-grid); background: rgba(59, 130, 246, 0.05);">
+                        <h2 style="font-size: 1rem; font-weight: 700; color: var(--text-pure-white); display: flex; align-items: center; gap: 8px;">
+                            <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--accent-success-glow);"></span>
+                            ElectionAI Guide Engine
+                        </h2>
+                        <p style="font-size: 0.75rem; color: var(--text-dim-slate); margin-top: 2px;">Real-time natural processing verification gateway node</p>
+                    </div>
+
+                    <div class="ai-assistant-frame" style="border: none; border-radius: 0; height: 400px;">
+                        <div id="ai-chat-logs" class="chat-logs-viewport">
+                            <!-- Populated dynamically through processing message stacks -->
+                        </div>
+                        <div class="chat-input-dock-panel">
+                            <input type="text" id="ai-chat-input-query" class="input-field-vector" style="flex: 1;" placeholder="Ask about systemic security or voter limits..." />
+                            <button id="ai-chat-send-trigger" class="btn-action-control" style="width: auto; padding: 0 16px;">Send</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Environment Parameter Adjuster Deck Layouts -->
+                <section class="glassmorphism-surface">
+                    <h2 class="panel-section-header" style="font-size: 1rem; margin-bottom: 16px;">Display Modifiers</h2>
+                    <div class="input-group-element" style="margin-bottom: 14px;">
+                        <label>Substrate Render Theme</label>
+                        <select id="opt-setting-theme" class="select-dropdown-vector">
+                            <option value="dark">Dark Substrate Engine</option>
+                            <option value="light">Light Substrate Engine</option>
+                        </select>
+                    </div>
+                    <div class="input-group-element" style="margin-bottom: 14px;">
+                        <label>Vector UI Accent Spectrum Hex</label>
+                        <input type="color" id="opt-setting-accent" class="input-field-vector" style="padding: 4px; height: 38px; cursor: pointer; width: 100%;" value="#3b82f6" />
+                    </div>
+                    <div class="input-group-element" style="margin-bottom: 14px;">
+                        <label>Interface Font Scaling Scale</label>
+                        <select id="opt-setting-font" class="select-dropdown-vector">
+                            <option value="small">Compact Processing Mode</option>
+                            <option value="medium" selected>Standard Variable Profile</option>
+                            <option value="large">Magnified Accessible Scale</option>
+                        </select>
+                    </div>
+                    <div class="input-group-element" style="flex-direction: row; align-items: center; justify-content: space-between; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border-neon-grid);">
+                        <label for="opt-setting-animations" style="cursor: pointer;">Enable Core Motion Accelerations</label>
+                        <input type="checkbox" id="opt-setting-animations" style="width: 16px; height: 16px; accent-color: var(--accent-primary-vector); cursor: pointer;" checked />
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Full Screen Winner Overlay System Trigger Window -->
+    <div id="winner-announcement-overlay" class="winner-announcement-overlay flex-center-alignment ui-display-none-force">
+        <canvas id="confetti-canvas-plane"></canvas>
+        <div class="winner-display-card scale-up-animation ui-text-center">
+            <div style="font-size: 0.75rem; font-weight: 800; letter-spacing: 0.15em; color: var(--accent-warning-glow); text-transform: uppercase; margin-bottom: 10px;">Consensus Sequence Complete</div>
+            <img id="winner-avatar-graphic" src="" alt="Winner Avatar" class="winner-avatar-large" />
+            <h2 id="winner-name-vector" style="font-size: 1.75rem; font-weight: 800; color: #fff; margin-bottom: 4px;">Candidate Name</h2>
+            <p id="winner-party-vector" style="font-size: 0.95rem; color: var(--text-dim-slate); margin-bottom: 24px;">Party Affiliation</p>
+            <div id="winner-metrics-breakdown" class="badge-count-vector" style="background: rgba(245, 158, 11, 0.15); color: var(--accent-warning-glow); display: inline-block; font-size: 0.85rem; padding: 8px 16px; font-family: monospace;">Metrics Loading...</div>
+        </div>
+    </div>
+
+    <!-- Shared Toast Boundary Layer Host Array -->
+    <div id="toast-boundary-anchor"></div>
+
+    <!-- Linked Platform Execution Code Logic Gateway -->
+    <script src="app.js" defer></script>
+</body>
+</html>
