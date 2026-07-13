@@ -248,7 +248,7 @@
             } catch (err) {
                 console.error("Cloud Vision Payload Error:", err);
                 showToast("Cloudflare connection failure. Check endpoint paths.", "danger");
-            } finaly {
+            } finally {
                 isProcessingFrame = false;
                 visionOverlay.style.display = "none";
             }
