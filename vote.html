@@ -30,7 +30,7 @@
             max-width: 480px;
             background: #222;
             border-radius: 8px;
-            transform: scaleX(-1); /* Mirror view for natural interaction */
+            transform: scaleX(-1);
         }
         button {
             background: #0070f3;
@@ -65,7 +65,7 @@
             border: 1px solid #c8e6c9;
         }
         canvas {
-            display: none; /* Processing asset hidden */
+            display: none;
         }
     </style>
 </head>
@@ -73,13 +73,13 @@
 
 <div class="kiosk-container">
     <h2>AI Ballot Verification Kiosk</h2>
-    <p>Position your printed ballot inside the terminal camera frame below to check status.</p>
+    <p id="instructionText">Initializing kiosk session...</p>
     
     <video id="webcam" autoplay playsinline></video>
     <canvas id="captureCanvas"></canvas>
     
     <br>
-    <button id="scanBtn" onclick="captureAndSendFrame()">Verify & Submit Vote</button>
+    <button id="scanBtn" onclick="handleKioskAction()" disabled>Initialize System</button>
     
     <div id="statusDisplay">Initializing video feed context...</div>
 </div>
@@ -89,72 +89,95 @@
     const canvas = document.getElementById('captureCanvas');
     const scanBtn = document.getElementById('scanBtn');
     const statusDisplay = document.getElementById('statusDisplay');
+    const instructionText = document.getElementById('instructionText');
 
-    // Initialize kiosk environment smoothly
+    let currentStep = "ENROLL"; // Steps: ENROLL -> VERIFY
+    let enrolledFacePayload = null;
+
     window.addEventListener('DOMContentLoaded', () => {
         statusDisplay.textContent = "System checking device baseline...";
         startWebcam();
     });
 
-    // Initialize Webcam Streams Safely (Terminal always stays active for new users)
     async function startWebcam() {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ 
                 video: { width: 640, height: 480 } 
             });
             video.srcObject = stream;
-            statusDisplay.textContent = "System ready. Position ballot and click verify.";
-            statusDisplay.className = "";
+            resetToEnrollmentStep();
         } catch (err) {
             statusDisplay.textContent = "Camera Error: Please grant camera access permissions to use this kiosk terminal.";
             statusDisplay.className = "warning-banner";
         }
     }
 
-    // Capture, Frame Compression, and Single Execution Rules Loop
-    async function captureAndSendFrame() {
-        scanBtn.disabled = true;
-        statusDisplay.textContent = "Processing image snapshot transmission...";
+    function resetToEnrollmentStep() {
+        currentStep = "ENROLL";
+        enrolledFacePayload = null;
+        scanBtn.disabled = false;
+        scanBtn.textContent = "Step 1: Capture Face Photo";
+        instructionText.textContent = "Look directly at the camera to snapshot your face signature.";
+        statusDisplay.textContent = "Ready to start session. Look at camera and click above.";
         statusDisplay.className = "";
+    }
 
-        // Downscale capture dimensions targeting optimized AI Vision shapes
+    function captureFrameBase64() {
         const ctx = canvas.getContext('2d');
         canvas.width = 640;
         canvas.height = 480;
-        
-        // Draw image frame to hidden scaling viewport matrix
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        
-        // Output compressed payload balancing quality against raw sizes
         const rawDataUrl = canvas.toDataURL('image/jpeg', 0.65);
-        const base64DataPayload = rawDataUrl.split(',')[1]; 
+        return rawDataUrl.split(',')[1];
+    }
+
+    function handleKioskAction() {
+        if (currentStep === "ENROLL") {
+            // Snapshot the initial user face identity lock
+            enrolledFacePayload = captureFrameBase64();
+            currentStep = "VERIFY";
+            
+            scanBtn.textContent = "Step 2: Verify & Submit Vote";
+            instructionText.textContent = "Position your printed ballot inside the terminal camera frame.";
+            statusDisplay.textContent = "Face locked. Now align your ballot paper and click submit.";
+            statusDisplay.className = "success-banner";
+        } else if (currentStep === "VERIFY") {
+            submitBallotAndVerifyFace();
+        }
+    }
+
+    async function submitBallotAndVerifyFace() {
+        scanBtn.disabled = true;
+        statusDisplay.textContent = "Verifying ballot and face matching thresholds...";
+        statusDisplay.className = "";
+
+        const currentBallotAndFacePayload = captureFrameBase64();
 
         try {
+            // Sends BOTH payloads to Cloudflare Worker to enforce face similarity checks on the backend
             const response = await fetch('https://electionai.180011.workers.dev/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ image: base64DataPayload })
+                body: JSON.stringify({ 
+                    faceLockImage: enrolledFacePayload,
+                    ballotSubmissionImage: currentBallotAndFacePayload 
+                })
             });
 
             const result = await response.json();
 
             if (response.ok && result.success) {
-                // SUCCESS: Vote processed perfectly.
-                statusDisplay.textContent = `Vote verified successfully! Text Detected: "${result.detectedText || 'Verified'}". Ready for next user.`;
+                statusDisplay.textContent = `Vote verified successfully! Text: "${result.detectedText || 'Verified'}". Resetting kiosk...`;
                 statusDisplay.className = "success-banner";
                 
-                // Keep terminal active! Flash a quick success sign, then clear for the next person
                 setTimeout(() => {
-                    scanBtn.disabled = false;
-                    statusDisplay.textContent = "Ready for next user. Position ballot and click verify.";
-                    statusDisplay.className = "";
+                    resetToEnrollmentStep();
                 }, 4000);
 
             } else {
-                // ACCESSED BLOCKED FOR THIS GUY ONLY: 
-                // Display error (e.g. "Duplicate signature detected"), but keep scanner alive for another person
+                // Keep the terminal from breaking completely. Block submission, but keep step active for correcting positioning.
                 scanBtn.disabled = false;
                 statusDisplay.textContent = `Verification Error: ${result.error || 'Submission restricted.'}`;
                 statusDisplay.className = "warning-banner";
