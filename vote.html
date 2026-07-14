@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Vision Terminal</title>
+    <title>AI Vision Terminal - Ballot Verification</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -67,7 +67,6 @@
         canvas {
             display: none;
         }
-        /* Visual log section showing who has already voted */
         .admin-logs {
             max-width: 600px;
             width: 100%;
@@ -90,13 +89,13 @@
         }
         .voter-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
             gap: 10px;
         }
         .voter-card {
             border: 1px solid #ddd;
             border-radius: 6px;
-            padding: 4px;
+            padding: 6px;
             text-align: center;
             background: #fafafa;
         }
@@ -106,11 +105,14 @@
             object-fit: cover;
             border-radius: 4px;
         }
-        .voter-id {
+        .voter-info {
             font-size: 10px;
-            color: #777;
-            margin-top: 3px;
-            font-family: monospace;
+            color: #444;
+            margin-top: 4px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     </style>
 </head>
@@ -186,7 +188,6 @@
         return rawDataUrl.split(',')[1];
     }
 
-    // Helper functions to pull/save from storage array database
     function getVoterRegistry() {
         const data = localStorage.getItem('kiosk_voter_registry');
         return data ? JSON.parse(data) : [];
@@ -206,46 +207,43 @@
         registry.forEach(voter => {
             const card = document.createElement('div');
             card.className = 'voter-card';
-            card.innerHTML = `<img src="${voter.thumbnail}"><div class="voter-id">ID: ${voter.id}</div>`;
+            card.innerHTML = `<img src="${voter.thumbnail}"><div class="voter-info">${voter.name}</div>`;
             voterGrid.appendChild(card);
         });
     }
 
     function handleKioskAction() {
         if (currentStep === "ENROLL") {
-            // 1. Capture the structural face profile string
             const ctx = canvas.getContext('2d');
             canvas.width = 160;
             canvas.height = 160;
             ctx.drawImage(video, 240, 160, 160, 160, 0, 0, 160, 160);
             
-            const thumbUrl = canvas.toDataURL('image/jpeg', 0.5);
             const faceHash = generateVisualHash(ctx);
-            
-            // 2. Scan history data array to verify uniqueness
             const registry = getVoterRegistry();
-            let hasVoted = false;
+            let faceMatchFound = false;
+
+            // Step 1 Check: Verify if the face matches an already registered user matrix
             for (let voter of registry) {
                 if (calculateHammingDistance(faceHash, voter.hash) < 5) {
-                    hasVoted = true;
+                    faceMatchFound = true;
                     break;
                 }
             }
 
-            if (hasVoted) {
-                statusDisplay.textContent = "ACCESS DENIED: Dual submission alert! This face signature has already cast a ballot.";
+            if (faceMatchFound) {
+                statusDisplay.textContent = "ACCESS DENIED: Duplicate submission detected! This person has already voted.";
                 statusDisplay.className = "warning-banner";
                 return;
             }
 
-            // Target lock cleared! Save values for Step 2 validation sequence
             enrolledFacePayload = captureFrameBase64();
             enrolledFaceHash = faceHash;
             currentStep = "VERIFY";
             
             scanBtn.textContent = "Step 2: Verify & Submit Vote";
             instructionText.textContent = "Position your printed ballot inside the terminal camera frame.";
-            statusDisplay.textContent = "Face structure verified. Now align your ballot paper and click submit.";
+            statusDisplay.textContent = "Face locked. Now align your ballot paper and click submit.";
             statusDisplay.className = "success-banner";
 
         } else if (currentStep === "VERIFY") {
@@ -255,12 +253,11 @@
 
     async function submitBallotAndVerifyFace() {
         scanBtn.disabled = true;
-        statusDisplay.textContent = "Verifying ballot and face matching thresholds...";
+        statusDisplay.textContent = "Verifying ballot and checking identity registries...";
         statusDisplay.className = "";
 
         const currentBallotAndFacePayload = captureFrameBase64();
 
-        // Prepare thumbnail snapshot to display in history logs before clear down
         const ctx = canvas.getContext('2d');
         canvas.width = 120; canvas.height = 120;
         ctx.drawImage(video, 260, 180, 120, 120, 0, 0, 120, 120);
@@ -279,17 +276,38 @@
             const result = await response.json();
 
             if (response.ok && result.success) {
-                // SUCCESS: Save profile data to historical cache block array
+                // Extract clean text identifier string sent back from the Worker
+                const detectedText = result.detectedText || "Verified Voter";
+                const cleanTextLower = detectedText.trim().toLowerCase();
+                
                 const registry = getVoterRegistry();
+                let nameMatchFound = false;
+
+                // Step 2 Check: Verify if this specific name has already submitted a ballot entry
+                for (let voter of registry) {
+                    if (voter.name.toLowerCase() === cleanTextLower && cleanTextLower !== "verified voter") {
+                        nameMatchFound = true;
+                        break;
+                    }
+                }
+
+                if (nameMatchFound) {
+                    scanBtn.disabled = false;
+                    statusDisplay.textContent = `ACCESS DENIED: A ballot under the name "${detectedText}" has already been processed!`;
+                    statusDisplay.className = "warning-banner";
+                    return;
+                }
+
+                // Unique submission confirmed: Save to registry log layout
                 registry.push({
-                    id: Math.floor(1000 + Math.random() * 9000),
+                    name: detectedText,
                     hash: enrolledFaceHash,
                     thumbnail: logThumbnail
                 });
                 saveVoterRegistry(registry);
                 renderVoterLogs();
 
-                statusDisplay.textContent = `Vote verified successfully! Text: "${result.detectedText || 'Verified'}". Resetting kiosk...`;
+                statusDisplay.textContent = `Vote verified successfully! Ballot Owner: "${detectedText}". Resetting kiosk...`;
                 statusDisplay.className = "success-banner";
                 
                 setTimeout(() => {
@@ -310,13 +328,13 @@
         }
     }
 
-    // Mathematical Image Processing Fingerprint Logic
+    // Mathematical Visual Hashing Methods
     function generateVisualHash(ctx) {
         const imgData = ctx.getImageData(0, 0, 160, 160).data;
         let pixels = [];
         for (let row = 0; row < 8; row++) {
             for (let col = 0; col < 8; col++) {
-                let r = 0, g = 0, b = 0, idx = (row * 20 * 160 + col * 20) * 4;
+                let idx = (row * 20 * 160 + col * 20) * 4;
                 pixels.push((imgData[idx] + imgData[idx+1] + imgData[idx+2]) / 3);
             }
         }
